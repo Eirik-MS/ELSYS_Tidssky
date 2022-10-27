@@ -1,9 +1,9 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import Bakgrunnsbilde
 from room import Room
 from overview import Overview
 from addpatient import Addpatient
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 #### The main structure of the Graphical User Interface
@@ -278,8 +278,6 @@ class GUI(object):
 
         self.verticalLayout_3.addWidget(self.overview)
         self.verticalLayout.addWidget(self.middle)
-
-        self.overview.verticalLayout_70.addWidget(Addpatient(self.overview.scrollingframe))
 
 ########################################################################################################################
 # Create the bottom of the three main frames. This frame will contain the credits and the widget to resize the frame

@@ -5,7 +5,9 @@
 # Created by: The Resource Compiler for PyQt5 (Qt v5.15.2)
 #
 # WARNING! All changes made in this file will be lost!
-
+import sys
+sys.path
+sys.path.append('C:\\Users\\mgnso\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages')
 from PyQt5 import QtCore
 
 qt_resource_data = b"\
