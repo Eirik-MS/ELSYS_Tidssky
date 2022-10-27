@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1340</width>
+    <height>768</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centrawidget">
+   <property name="styleSheet">
+    <string notr="true">background:none;
+</string>
+   </property>
+   <widget class="QFrame" name="overview">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>230</y>
+      <width>1312</width>
+      <height>403</height>
+     </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>16777215</width>
+      <height>8765</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame#overview{background-color: rgba(0, 0, 0, 100); border-radius:15px;}</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_11">
+     <item row="0" column="0" colspan="2">
+      <widget class="QFrame" name="timeplan">
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:rgb(0,0,0,80); border-radius:15px;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_7">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="timeplanlabel">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>-1</pointsize>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font-size:25px; background:none;
+color: rgba(255, 255, 255, 200);</string>
+          </property>
+          <property name="text">
+           <string>Timeplan</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QFrame" name="scrollframe">
+       <property name="minimumSize">
+        <size>
+         <width>644</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QFrame#frame_3{background-color:rgb(0,0,0,80);}
+
+ QScrollBar:vertical {
+	border: none;
+    background: rgb(45, 45, 68, 0);
+    width: 8px;
+    margin: 15px 0 15px 0;
+	border-radius: 0px;
+ }
+
+/*  HANDLE BAR VERTICAL */
+QScrollBar::handle:vertical {	
+	
+	background-color: rgba(0, 0, 0, 120);
+	min-height: 30px;
+	border-radius: 4px;
+
+}
+
+QScrollBar::handle:vertical:hover{	
+	
+	background-color: rgb(189, 223, 246, 180);
+}
+QScrollBar::handle:vertical:pressed {	
+	
+	background-color: rgba(189, 223, 246, 100);
+}
+
+/* BTN TOP - SCROLLBAR */
+QScrollBar::sub-line:vertical {
+	border: none;
+	background-color: rgb(59, 59, 90, 0);
+	height: 0px;
+
+}
+QScrollBar::sub-line:vertical:hover {	
+	background-color: rgb(255, 0, 127, 0);
+}
+QScrollBar::sub-line:vertical:pressed {	
+	background-color: rgb(185, 0, 92, 0);
+}
+
+/* BTN BOTTOM - SCROLLBAR */
+QScrollBar::add-line:vertical {
+	border: none;
+	background-color: rgb(59, 59, 90, 0);
+	height: 0px;
+}
+QScrollBar::add-line:vertical:hover {	
+	background-color: rgb(255, 0, 127, 0);
+}
+QScrollBar::add-line:vertical:pressed {	
+	background-color: rgb(185, 0, 92, 0);
+}
+
+/* RESET ARROW */
+QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+	background: none;
+}
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+	background: none;
+}
+
+QScrollBar::sub-page:vertical {
+    
+	background-color: rgb(255, 85,0,0);
+}
+
+QScrollBar::add-page:vertical {
+    background-color:rgb(0,0,123,0);
+}
+</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_12">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <property name="horizontalSpacing">
+         <number>0</number>
+        </property>
+        <property name="verticalSpacing">
+         <number>5</number>
+        </property>
+        <item row="0" column="0" colspan="2">
+         <widget class="QScrollArea" name="scrollArea_3">
+          <property name="styleSheet">
+           <string notr="true">QScrollArea{background-color:rgb(0,0,0,80); border-radius:15px;}
+QScrollBar::add-page:vertical, QScrollBar::sub-page:verticall{background-color:rgb(0,0,0,0);}</string>
+          </property>
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_3">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>642</width>
+             <height>312</height>
+            </rect>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">background-color:rgb(0,0,0,0);</string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_69">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <property name="leftMargin">
+             <number>10</number>
+            </property>
+            <property name="topMargin">
+             <number>10</number>
+            </property>
+            <property name="rightMargin">
+             <number>10</number>
+            </property>
+            <property name="bottomMargin">
+             <number>10</number>
+            </property>
+            <item>
+             <widget class="QFrame" name="scrollingframe">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QFrame#scrollingframe{background:none;}</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_70">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QFrame" name="leggtilframe">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:none;</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <property name="spacing">
+            <number>4</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="fjern">
+             <property name="minimumSize">
+              <size>
+               <width>70</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Fjern markert(e) pasienter fra timeplanen.</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton{
+border:1px solid;
+border-color: rgb(39, 39, 39);
+border-radius:0px;
+border-radius:10px;
+background-color: rbg(0,0,0,80);
+color: rgb(217, 217, 217);
+}
+QPushButton:hover{
+background-color: rgba(0, 0, 0, 120);
+}
+
+QPushButton:pressed{
+background-color: rgba(0, 0, 0, 200);
+}</string>
+             </property>
+             <property name="text">
+              <string>Fjern pasient:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="fjern_2">
+             <property name="minimumSize">
+              <size>
+               <width>70</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Sett pasient inn midt i planen. Fører pasienten frem i køen og forskyver behandlingstidspunktene til pasientene bak i køen.</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton{
+border:1px solid;
+border-color: rgb(39, 39, 39);
+border-radius:0px;
+border-radius:10px;
+background-color: rbg(0,0,0,80);
+color: rgb(217, 217, 217);
+}
+QPushButton:hover{
+background-color: rgba(0, 0, 0, 120);
+}
+
+QPushButton:pressed{
+background-color: rgba(0, 0, 0, 200);
+}</string>
+             </property>
+             <property name="text">
+              <string>Sett inn pasient:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="fjern_3">
+             <property name="minimumSize">
+              <size>
+               <width>70</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Bytt timeplanene til to pasienter. Merk: kun to pasienter kan byttes om gangen.</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton{
+border:1px solid;
+border-color: rgb(39, 39, 39);
+border-radius:0px;
+border-radius:10px;
+background-color: rbg(0,0,0,80);
+color: rgb(217, 217, 217);
+}
+QPushButton:hover{
+background-color: rgba(0, 0, 0, 120);
+}
+
+QPushButton:pressed{
+background-color: rgba(0, 0, 0, 200);
+}</string>
+             </property>
+             <property name="text">
+              <string>Bytt pasienter:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="leggtil">
+             <property name="minimumSize">
+              <size>
+               <width>70</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Legger til en pasient bakerst i timeplanen.</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton{
+border:1px solid;
+border-color: rgb(39, 39, 39);
+border-radius:0px;
+border-radius:10px;
+background-color: rbg(0,0,0,80);
+color: rgb(217, 217, 217);
+}
+QPushButton:hover{
+background-color: rgba(0, 0, 0, 120);
+}
+
+QPushButton:pressed{
+background-color: rgba(0, 0, 0, 200);
+}</string>
+             </property>
+             <property name="text">
+              <string>Legg til pasient:</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QFrame" name="frame_35">
+       <property name="minimumSize">
+        <size>
+         <width>644</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color:rgb(0,0,0,0); corner-radius:15px;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_72">
+        <property name="spacing">
+         <number>4</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QFrame" name="frame_36">
+          <property name="styleSheet">
+           <string notr="true">border-radius:15px;
+background-color:rgb(0,0,0,80); 
+</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frame_37">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background:none;</string>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="Bakgrunnsbilde.qrc"/>
+ </resources>
+ <connections/>
+</ui>
