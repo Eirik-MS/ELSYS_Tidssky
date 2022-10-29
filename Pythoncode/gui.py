@@ -4,7 +4,7 @@ from room import Room
 from overview import Overview
 from addpatient import Addpatient
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from Classes import Patients
 
 #### The main structure of the Graphical User Interface
 
@@ -375,6 +375,8 @@ class GUI(object):
         #### I searched up this one and had no clue what it meant. It is propably needed is all i could understand
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+
 
 
 

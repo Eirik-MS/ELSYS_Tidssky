@@ -1,11 +1,7 @@
 #### Imports
-import sys
-sys.path
-sys.path.append('C:\\Users\\mgnso\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages')
-#from PyQt5 import QtCore, QtGui, QtWidgets
-import Bakgrunnsbilde
-from gui import GUI
 from Functions import *
+from Classes import Patients
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -14,9 +10,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.show()
 
-        Ui_Functions.Ui_definitions(self)
 
-        ########## move the window
+
+        Ui_Functions.buttonDefinitions(self)
+
+        ########## Move the window
 
         def moveWindow(event):
             if event.buttons() == QtCore.Qt.LeftButton:
@@ -28,6 +26,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def mousePressEvent(self, event):
         self.dragPos = event.globalPos()
+
 
 #### Run Aplication
 

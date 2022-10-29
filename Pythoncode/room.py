@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import Bakgrunnsbilde
 import datetime
+from main import*
 
 
 class Room(QtWidgets.QFrame):
@@ -453,6 +454,8 @@ class Room(QtWidgets.QFrame):
         self.verticalLayout_44.addWidget(self.addtimeframe)
         self.verticalLayout_4.addWidget(self.timer)
 
+        self.plus.clicked.connect(lambda: self.ui.overview.patients.addTime(self.ui.overview.navninput.text(),self.textenter.text()))
+
 ################################################################################################################
 # This one thing I have no idea of what does
 #################################################################################################################
@@ -536,10 +539,3 @@ class Room(QtWidgets.QFrame):
 
                 count()
 
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    ui = Room()
-    ui.show()
-    sys.exit(app.exec_())

@@ -1,8 +1,7 @@
-import sys
 from addpatient import Addpatient
-sys.path
-sys.path.append('C:\\Users\\mgnso\\AppData\\Local\\Programs\\Python\\Python310\\lib\\site-packages')
 from PyQt5 import QtCore, QtGui, QtWidgets
+from Classes import Patients
+from room import Room
 
 
 class Overview(QtWidgets.QFrame):
@@ -88,6 +87,7 @@ class Overview(QtWidgets.QFrame):
         self.scrollframeLay = QtWidgets.QVBoxLayout(self.scrollframe)
         self.scrollframeLay.setContentsMargins(15, 3, 15, 3)
         self.scrollframeLay.setSpacing(3)
+        self.scrollframeLay.addItem(QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding))
         self.scrollframeLay.setObjectName("scrollframeLay")
         self.scrollwidgetLay.addWidget(self.scrollframe)
         self.scrollarea.setWidget(self.scrollwidget)
@@ -212,24 +212,44 @@ class Overview(QtWidgets.QFrame):
         self.contentsLay.addWidget(self.knapper)
         self.verticalLayout.addWidget(self.contents)
 
-        self.leggtil.clicked.connect(lambda:self.addPatient(self.navninput.text(), self.tidinput.text(), self.rominput.currentText()))
+        #self.leggtil.clicked.connect(lambda: self.addPatient(self.navninput.text(), self.tidinput.text(), self.rominput.currentText()))
+        self.fjern.clicked.connect(lambda: self.deletePatient(self.navninput.text()))
+        self.settinn.clicked.connect(lambda: self.addTime(self.navninput.text(), self.tidinput.text()))
+
 
 
         self.retranslateUi(self)
 
         QtCore.QMetaObject.connectSlotsByName(self)
 
+        self.patients = Patients()
+
+    def addTime(self, name, addTime):
+        _translate = QtCore.QCoreApplication.translate
+        self.patients.addTime(name, addTime)
+        self.patients.dict[name][2].tid.setText(_translate("Form", f"{self.patients.dict[name][0]}"))
+
+
     def addPatient(self, name, time, room):
 
-        patient = Addpatient(self.scrollframe)
         _translate = QtCore.QCoreApplication.translate
-        patient.navn.setText(_translate("Form", f"{name}"))
-        patient.tid.setText(_translate("Form", f"{time}"))
-        patient.rom.setText(_translate("Form", f"{room}"))
-        self.scrollframeLay.addWidget(patient)
+        #self.patients.addPatient(name, time, room)
+        self.patients.addPatient(name, time, room, Addpatient(self.scrollframe))
+        self.patients.dict[name][2].navn.setText(_translate("Form", f"{name}"))
+        self.patients.dict[name][2].tid.setText(_translate("Form", f"{self.patients.dict[name][0]}"))
+        self.patients.dict[name][2].rom.setText(_translate("Form", f"{self.patients.dict[name][1]}"))
+        #
+        self.scrollframeLay.addWidget(self.patients.dict[name][2])
+        #
         self.navninput.setText('')
         self.tidinput.setText('')
 
+    def deletePatient(self, name):
+
+        self.patients.dict[name][2].setParent(None)
+        del self.patients.dict[name]
+        self.navninput.setText('')
+        self.tidinput.setText('')
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -251,6 +271,3 @@ class Overview(QtWidgets.QFrame):
         self.bytt.setText(_translate("MainWindow", "Bytt pasienter:"))
         self.leggtil.setToolTip(_translate("MainWindow", "Legger til en pasient bakerst i timeplanen."))
         self.leggtil.setText(_translate("MainWindow", "Legg til pasient:"))
-import Bakgrunnsbilde
-
-

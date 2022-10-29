@@ -17,16 +17,9 @@ class Patients:
         time = time[:5]
         return time
 
-    def addPatient(self, name, time, room):
+    def addPatient(self, name, time, room, obj):
 
-        if name not in self.dict:
-
-            self.dict[name] = [time, room]
-
-        else:
-
-            self.dict[name][0] = time
-            self.dict[name][1] = room
+        self.dict[name] = [time, room, obj]
 
     def addTime(self, name, addtime):
 
@@ -43,9 +36,6 @@ class Patients:
     def deletePatient(self, name):
 
         del self.dict[name]
-
-
-
 
     def print_dict(self):
 
@@ -70,17 +60,5 @@ class Patients:
                  else:
                      print(f', {i}', end='')
 
-patientList = Patients()
 
-patientList.addPatient('Magnus', '14:15', '3')
-patientList.addPatient('Pål', '13:30', '1')
-patientList.addPatient('Anders', '12:45', '2')
-patientList.addPatient('Paul', '14:00', '4')
-patientList.addTime('Magnus', '15')
-patientList.subTime('Magnus', '15')
-patientList.subTime('Magnus', '15')
-patientList.deletePatient('Magnus')
-
-
-print(patientList.dict)
 
