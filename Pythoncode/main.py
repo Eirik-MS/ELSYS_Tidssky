@@ -24,6 +24,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.ui.frame.mouseMoveEvent = moveWindow
 
+        self.ui.close.clicked.connect(self.close)
+        self.ui.minimize.clicked.connect(self.showMinimized)
+
     def mousePressEvent(self, event):
         self.dragPos = event.globalPos()
 

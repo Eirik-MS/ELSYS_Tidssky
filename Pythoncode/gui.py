@@ -105,7 +105,7 @@ class GUI(object):
 
         font = QtGui.QFont()
         font.setFamily("Roboto Cn")
-        font.setPointSize(15)
+        font.setPixelSize(16)
         font.setBold(True)
         font.setItalic(False)
         font.setWeight(75)
