@@ -354,10 +354,24 @@ class GUI(object):
 
         self.stretch.setStyleSheet("border-image:none;  background:none;")
 
-        #### Set grid layout
+        #### Add the frame to a layout
 
         self.horizontalLayout.addWidget(self.stretch)
         self.verticalLayout.addWidget(self.bottom)
+
+        self.stretchLay = QtWidgets.QHBoxLayout(self.stretch)
+        self.stretchLay.setContentsMargins(0, 0, 0, 0)
+        self.stretchLay.setSpacing(0)
+
+        ################################################################################################################
+        # Create the sizeGrip widget and add it to the layout
+        ################################################################################################################
+
+        self.sizeGrip = QtWidgets.QSizeGrip(self.stretch)
+        self.stretchLay.addWidget(self.sizeGrip)
+
+
+
 
 ########################################################################################################################
 # Something i'm not quite sure what does, but needs to be here for everything to work

@@ -1,5 +1,4 @@
 from gui import *
-
 from main import *
 from gui import *
 from overview import *
@@ -16,20 +15,21 @@ class Ui_Functions(MainWindow):
 
         if status == 0:
 
-            self.showMaximized()
+
 
             GLOBAL_STATE = 1
 
-            #self.drop_shadow_layout.setContentsMargins(0, 0, 0, 0)
-            self.ui.centrawidget.setStyleSheet("border-radius: 0px;")
+            self.ui.drop_shadow_layout.setContentsMargins(0, 0, 0, 0)
+            self.ui.mainwindow.setStyleSheet("border-image: url(:/images/Background3.jpg);border-radius: 0px;")
+            self.showMaximized()
 
 
         else:
             GLOBAL_STATE = 0
             self.showNormal()
             self.resize(self.width()+1, self.height()+1)
-            #self.drop_shadow_layout.setContentsMargins(10, 10, 10, 10)
-            #self.ui.centrawidget.setStyleSheet("border-radius: 15px;")
+            self.ui.drop_shadow_layout.setContentsMargins(10, 10, 10, 10)
+            self.ui.mainwindow.setStyleSheet("border-image: url(:/images/Background3.jpg);border-radius: 15px;")
 
 
     def buttonDefinitions(self):
@@ -38,12 +38,6 @@ class Ui_Functions(MainWindow):
 
         self.ui.maximize.clicked.connect(lambda: Ui_Functions.maximize_restore(self))
 
-
-        # Buttons in the overview object
-        self.ui.overview.leggtil.clicked.connect(lambda: self.ui.overview.addPatient(
-            self.ui.overview.navninput.text(),
-            self.ui.overview.tidinput.text(),
-            self.ui.overview.rominput.currentText()))
 
 
 

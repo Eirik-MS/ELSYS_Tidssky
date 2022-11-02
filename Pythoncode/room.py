@@ -23,7 +23,9 @@ class Room(QtWidgets.QFrame):
         self.createRoom(self, *args, **kwargs)
 
         # Define buttons
-        self.start.clicked.connect(lambda: self.timerColors())
+        self.start.clicked.connect( lambda: self.timerColors())
+        self.textenter.returnPressed.connect(lambda: self.timerColors())
+        self.textenter.returnPressed.connect(lambda: self.timerFunctions('start'))
         self.start.clicked.connect( lambda: self.timerFunctions('start'))
         self.stop.clicked.connect(  lambda: self.timerFunctions('stop'))
         self.reset.clicked.connect( lambda: self.timerFunctions('reset'))
@@ -456,11 +458,6 @@ class Room(QtWidgets.QFrame):
         # Create an input mask:
         self.textenter.setInputMask("99:99:99")
 
-
-        #connect enter pressed to start:
-        self.textenter.returnPressed.connect(lambda: self.timerFunctions("start"))
-
-
         ################################################################################################################
         # Create the plus time button
         #################################################################################################################
@@ -643,14 +640,6 @@ class Room(QtWidgets.QFrame):
 
             # Apply the framerate
             self.colorTimer.setInterval(int(1000/self.framerate))
-            self.colorTimer.start()
-
-            # if self.timer_counter_num >= 1:
-            #     self.colorTimer.start()
-            # else:
-            #     self.colorTimer.stop()
-            #
-
             self.colorTimer.start()
 
     # Creating the sinewave that controls the pulsating colors
