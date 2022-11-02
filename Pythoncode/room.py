@@ -4,9 +4,11 @@ import Bakgrunnsbilde
 import datetime
 import numpy as np
 from sympy import *
+from main import MainWindow
 
 class Room(QtWidgets.QFrame):
 
+    # Initialize variables
     def __init__(self, *args, **kwargs):
 
         # Make global timer variables
@@ -23,14 +25,12 @@ class Room(QtWidgets.QFrame):
         self.createRoom(self, *args, **kwargs)
 
         # Define buttons
-        self.start.clicked.connect( lambda: self.timerColors())
-        self.textenter.returnPressed.connect(lambda: self.timerColors())
         self.textenter.returnPressed.connect(lambda: self.timerFunctions('start'))
         self.start.clicked.connect( lambda: self.timerFunctions('start'))
         self.stop.clicked.connect(  lambda: self.timerFunctions('stop'))
         self.reset.clicked.connect( lambda: self.timerFunctions('reset'))
 
-    # Define the function that configures the Room-object (self):
+    # Configure the Room-object (self):
     def createRoom(self, *args, **kwargs):
 
 ########################################################################################################################
@@ -280,9 +280,8 @@ class Room(QtWidgets.QFrame):
         self.timerframe.setMinimumSize(QtCore.QSize(250, 80))
         self.timerframe.setMaximumSize(QtCore.QSize(250, 80))
 
-
         self.timerframe.setStyleSheet(f"""border-radius:40px; background:none; border:2px solid;
-                                border-color: rgba(255, 255, 255, 255)""")
+                                          border-color: rgba(255, 255, 255, 255)""")
 
         # Set grid layout
 
@@ -449,14 +448,35 @@ class Room(QtWidgets.QFrame):
         font.setFamily("Roboto Cn")
         font.setPixelSize(13)
         self.textenter.setFont(font)
-        self.textenter.setStyleSheet("border-radius:5px;\n""background-color: rgba(0, 0, 0, 120); \n"
+        self.textenter.setStyleSheet("border-radius:5px;\n" 
+                                     "background-color: rgba(0, 0, 0, 120); \n"
                                      "color: rgb(255, 255, 255);")
 
         self.textenter.setAlignment(QtCore.Qt.AlignCenter)
         self.horizontalLayout_6.addWidget(self.textenter)
 
+        # Create a layout inside the textenter:
+        self.textenterlay = QtWidgets.QHBoxLayout(self.textenter)
+        self.textenterlay.setContentsMargins(15, 0,0, 0)
+        self.textenterlabel = QtWidgets.QLabel(self.textenter)
+        self.textenterlay.addWidget(self.textenterlabel)
+        self.textenterlabel.setStyleSheet("background:none")
+        self.textenter.setFont(font)
+
+
         # Create an input mask:
+        self.textenter.setText("00:00:00")
         self.textenter.setInputMask("99:99:99")
+
+        # Define the initial input validator
+        self.reg_ex = QtCore.QRegExp("[0-2]{1}[0-3]{1}"+":"+"[0-5]{1}[0-9]{1}"+":"+"[0-5]{1}[0-9]{1}")
+        self.input_validator1 = QtGui.QRegExpValidator(self.reg_ex, self.textenter)
+        self.textenter.setValidator(self.input_validator1)
+
+        # Define the input validator for when the timer is running:
+        self.reg_ex2 = QtCore.QRegExp("[0-9]{2}")
+        self.input_validator2 = QtGui.QRegExpValidator(self.reg_ex2, self.textenter)
+
 
         ################################################################################################################
         # Create the plus time button
@@ -511,42 +531,43 @@ class Room(QtWidgets.QFrame):
         ########### Set start button
 
 
-        self.lcdtime.setText(self._translate("MainWindow", "0:00:00"))
+        self.lcdtime.setText(self._translate("MainWindow", "00:00:00"))
 
     # Define a function that tells the timer how to operate:
     def timerFunctions(self, work):
 
         # When the start-button is pressed:
-        if work == 'start':
+        if work == 'start' and self.textenter.text() != "00:00:00":
 
-            # First check if the entrybox is empty and timer is started for the first timer:
-            if self.textenter.text() != '' and len(self.textenter.text()) == 8:
+            # Set the state of the timer to Running
+            self.timer_running = True
 
-                # Set the state of the timer to Running
-                self.timer_running = True
+            # Disable and enable buttons
+            self.start.setEnabled(False)
+            self.stop.setEnabled(True)
+            self.reset.setEnabled((False))
 
-                # Disable and enable buttons
-                self.start.setEnabled(False)
-                self.stop.setEnabled(True)
-                self.reset.setEnabled((False))
+             # If the timer starts for the first time, create timer-thread and fetch the time from the entrybox
+            if self.timer_counter_num == 0:
 
-                # If the timer starts for the first time, create timer-thread and fetch the time from the entrybox
-                if self.timer_counter_num == 0:
+                #Fetch time from entrybox
+                timer_time_str = self.textenter.text()
+                hours, minutes, seconds = timer_time_str.split(':')
+                minutes = int(minutes) + (int(hours) * 60)
+                seconds = int(seconds) + (minutes * 60)
+                self.timer_counter_num = self.timer_counter_num + seconds
 
-                    #Fetch time from entrybox
+                # Convert the entrybox to plus/minus time:
+                self.textenter.setInputMask("99")
+                self.textenterlabel.setText(self._translate("MainWindow", "Min ±"))
+                self.textenter.setText(self._translate("MainWindow", '00'))
+                self.textenter.setValidator(self.input_validator2)
 
-                    timer_time_str = self.textenter.text()
-                    hours, minutes, seconds = timer_time_str.split(':')
-                    minutes = int(minutes) + (int(hours) * 60)
-                    seconds = int(seconds) + (minutes * 60)
-                    self.timer_counter_num = self.timer_counter_num + seconds
 
-                    # Clear the entrybox and disable: (entrybox is set to one space to
-                    # differentiate if it's started the first or n-th time.
-                    self.textenter.setText(self._translate("MainWindow", ' '))
-                    self.textenter.setEnabled(False)
 
                 # Start the count() function:
+                self.count()
+            else:
                 self.count()
 
         # When the stop-button is pressed:
@@ -576,18 +597,22 @@ class Room(QtWidgets.QFrame):
                 # Reset the time
                 self.timer_counter_num = 0
 
-                # Display "00:00:00"
-                self.lcdtime.setText(self._translate("MainWindow", f'00:00:00'))
+            # Display "00:00:00"
+            self.lcdtime.setText(self._translate("MainWindow", '00:00:00'))
 
-                #Enable/Disable buttons
-                self.start.setEnabled(True)
-                self.reset.setEnabled(False)
+            #Enable/Disable buttons
+            self.start.setEnabled(True)
+            self.reset.setEnabled(False)
 
-                # Enable the entrybox again:
-                self.textenter.setEnabled(True)
+            # Reset the entrybox:
+            self.textenter.setText(self._translate("MainWindow", '00:00:00'))
+            self.textenter.setInputMask("99:99:99")
 
-                # Clear the entrybox (no spaces):
-                self.textenter.setText(self._translate("MainWindow", ''))
+            # Convert the textenter back to regular time format
+            self.textenter.setInputMask("99:99:99")
+            self.textenter.setText(self._translate("MainWindow", "00:00:00"))
+            self.textenterlabel.setText(self._translate("MainWindow", ""))
+            self.textenter.setValidator(self.input_validator1)
 
     # Define a function that runs once a seconnd whenever the timer is on:
     def count(self):
@@ -599,6 +624,7 @@ class Room(QtWidgets.QFrame):
             if self.timer_counter_num == 0:
 
                 self.timerFunctions('reset')
+                return
 
             # If time hasn't run out, set display variable to the current time:
             else:
@@ -618,72 +644,5 @@ class Room(QtWidgets.QFrame):
         # Run the count() function once a second
         self.timer.start()
 
-    # Define the color of the timer according to time left:
-    def timerColors(self):
-
-        if self.timer_counter_num==0:
-
-            # # Set the framerate of the color animation
-            self.framerate = 20
-
-            # Duration of each pulse in second:
-            self.seconds     = 1 #seconds
-            self.period      = (2*sympy.pi)/(self.framerate*self.seconds)
-            self.sineValue   = 3*sympy.pi/2
-
-            # Define the biggest alpha value
-            self.alphaMax = 255
-
-            # Create a thread that can run the color animation:
-            self.colorTimer = QtCore.QTimer()
-            self.colorTimer.timeout.connect(lambda:self.alphaWave())
-
-            # Apply the framerate
-            self.colorTimer.setInterval(int(1000/self.framerate))
-            self.colorTimer.start()
-
-    # Creating the sinewave that controls the pulsating colors
-    def alphaWave(self):
-
-        greenTime   = 30 * 60  # 30 minutes
-        redTime     = 10 * 60  # 10 minutes
-        offColor    = 0        # seconds
-
-        pulse = sympy.sin(self.sineValue)
-        pulse = float((pulse + 1) / 2)
-        self.sineValue += self.period
-        alpha = int(self.alphaMax * pulse)
-
-        if self.sineValue == 7*sympy.pi/2:
-            self.sineValue = 3*sympy.pi/2
-
-        if   self.timer_counter_num >= greenTime:
-
-            self.timerframe.setStyleSheet(f"""  border-radius:40px; background:none; border:2px solid;
-                                                        border-color: qlineargradient(spread:reflect, x1:0.5, y1:0, x2:1,
-                                                        y2:0, stop:0 rgba(0, {alpha}, 0, {alpha / 2}), stop:1 rgba(120, 255, 120, {(alpha + 200) / 2}));""")
-
-        elif self.timer_counter_num >= redTime:
-
-            self.timerframe.setStyleSheet(f"""  border-radius:40px; background:none; border:2px solid;
-                                                        border-color: qlineargradient(spread:reflect, x1:0.5, y1:0, x2:1,
-                                                        y2:0, stop:0 rgba({alpha}, 255, 0, {alpha / 2}), stop:1 rgba(255, 255, 0, {(alpha + 200) / 2}));""")
-
-        elif self.timer_counter_num <= redTime and self.timer_counter_num > 0:
-
-            self.timerframe.setStyleSheet(f"""  border-radius:40px; background:none; border:2px solid;
-                                            border-color: qlineargradient(spread:reflect, x1:0.5, y1:0, x2:1,
-                                            y2:0, stop:0 rgba({alpha}, 0, 0, {alpha / 2}), stop:1 rgba(255, 120, 120, {(alpha + 200) / 2}));""")
-
-        elif self.timer_counter_num == 0:
-            self.timerframe.setStyleSheet(f"""border-radius:40px; background:none; border:2px solid;
-                                                                  border-color: qlineargradient(spread:reflect, x1:0.5, y1:0, x2:1,
-                                                                  y2:0, stop:0 rgba(255, 255, 255, 120), stop:1 rgba(255, 255, 255, 120));""")
-            self.colorTimer.stop()
-
-
-
-
-
-
-
+    def addTime(self, time):
+        
