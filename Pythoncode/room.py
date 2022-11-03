@@ -1,23 +1,43 @@
+import sympy
 from PyQt5 import QtCore, QtGui, QtWidgets
 import Bakgrunnsbilde
 import datetime
-
+import numpy as np
+from sympy import *
+from main import MainWindow
 
 class Room(QtWidgets.QFrame):
+
+    # Initialize variables
     def __init__(self, *args, **kwargs):
 
-        #### Timer global values
-
+        # Make global timer variables
         self.timer_counter_num = 0
-        self.stopwatch_counter_num = 0
-        self.stopwatch_running = False
         self.timer_running = False
 
+        #Make the frame
+        QtWidgets.QFrame.__init__(self, *args, **kwargs)
+
+        # Create global translation protocol:
+        self._translate = QtCore.QCoreApplication.translate
+
+        # Configure the frame
+        self.createRoom(self, *args, **kwargs)
+
+        # Define buttons
+        self.textenter.returnPressed.connect(lambda: self.timerFunctions('start'))
+        self.start.clicked.connect( lambda: self.timerFunctions('start'))
+        self.stop.clicked.connect(  lambda: self.timerFunctions('stop'))
+        self.reset.clicked.connect( lambda: self.timerFunctions('reset'))
+
+    # Configure the Room-object (self):
+    def createRoom(self, *args, **kwargs):
+
 ########################################################################################################################
-# Create the main frame
+# Configuring the main frame
 ########################################################################################################################
 
-        QtWidgets.QFrame.__init__(self, *args, **kwargs)
+
         self.setObjectName("MainWindow")
 
         # Set the size of the window and size constraints
@@ -62,7 +82,7 @@ class Room(QtWidgets.QFrame):
         self.label_2 = QtWidgets.QLabel(self.roomlabel)
         font = QtGui.QFont()
         font.setFamily("Roboto")
-        font.setPointSize(10)
+        font.setPixelSize(13)
         font.setBold(True)
         font.setWeight(75)
         font.setKerning(True)
@@ -109,7 +129,7 @@ class Room(QtWidgets.QFrame):
         self.pasientlabel = QtWidgets.QLabel(self.pasientframe)
         font = QtGui.QFont()
         font.setFamily("Roboto Cn")
-        font.setPointSize(10)
+        font.setPixelSize(13)
         self.pasientlabel.setFont(font)
         self.pasientlabel.setStyleSheet("background:none;""color: rgb(217, 217, 217);")
         self.verticalLayout_7.addWidget(self.pasientlabel, 0, QtCore.Qt.AlignHCenter)
@@ -128,7 +148,7 @@ class Room(QtWidgets.QFrame):
         self.pasientsvarlabel = QtWidgets.QLabel(self.pasientsvarframe)
         font = QtGui.QFont()
         font.setFamily("Roboto Cn")
-        font.setPointSize(10)
+        font.setPixelSize(13)
         self.pasientsvarlabel.setFont(font)
         self.pasientsvarlabel.setStyleSheet("background:none;""color: rgb(255, 255, 255);")
         self.pasientsvarlabel.setAlignment(QtCore.Qt.AlignCenter)
@@ -154,7 +174,7 @@ class Room(QtWidgets.QFrame):
         self.statuslabel = QtWidgets.QLabel(self.statusframe)
         font = QtGui.QFont()
         font.setFamily("Roboto Cn")
-        font.setPointSize(10)
+        font.setPixelSize(13)
         self.statuslabel.setFont(font)
         self.statuslabel.setStyleSheet("background:none;""color: rgb(217, 217, 217);")
         self.verticalLayout_9.addWidget(self.statuslabel, 0, QtCore.Qt.AlignHCenter)
@@ -176,7 +196,7 @@ class Room(QtWidgets.QFrame):
         self.statussvarlabel = QtWidgets.QLabel(self.statussvarframe)
         font = QtGui.QFont()
         font.setFamily("Roboto Cn")
-        font.setPointSize(10)
+        font.setPixelSize(13)
         self.statussvarlabel.setFont(font)
         self.statussvarlabel.setStyleSheet("background:none;""color: rgb(255, 255, 255);")
         self.statussvarlabel.setAlignment(QtCore.Qt.AlignCenter)
@@ -204,7 +224,7 @@ class Room(QtWidgets.QFrame):
         self.nestebehlabel = QtWidgets.QLabel(self.nestebeh)
         font = QtGui.QFont()
         font.setFamily("Roboto Cn")
-        font.setPointSize(10)
+        font.setPixelSize(13)
         self.nestebehlabel.setFont(font)
         self.nestebehlabel.setStyleSheet("background:none;""color: rgb(217, 217, 217);")
 
@@ -230,13 +250,13 @@ class Room(QtWidgets.QFrame):
         self.nestebehsvarlabel = QtWidgets.QLabel(self.nestebehsvarframe)
         font = QtGui.QFont()
         font.setFamily("Roboto Cn")
-        font.setPointSize(10)
+        font.setPixelSize(13)
         self.nestebehsvarlabel.setFont(font)
         self.nestebehsvarlabel.setStyleSheet("background:none;""color: rgb(255, 255, 255);")
 
         # Set grid layout
 
-        self.verticalLayout_12.addWidget(self.nestebehsvarlabel)
+        self.verticalLayout_12.addWidget(self.nestebehsvarlabel, 0, QtCore.Qt.AlignHCenter)
         self.gridLayout.addWidget(self.nestebehsvarframe, 2, 1, 1, 1)
         self.verticalLayout_4.addWidget(self.pasientstatus)
 
@@ -259,9 +279,9 @@ class Room(QtWidgets.QFrame):
         self.timerframe = QtWidgets.QFrame(self.timer)
         self.timerframe.setMinimumSize(QtCore.QSize(250, 80))
         self.timerframe.setMaximumSize(QtCore.QSize(250, 80))
-        self.timerframe.setStyleSheet("border-radius:40px;""background:none;""border:2px solid;"
-                                      "border-color: qlineargradient(spread:reflect, x1:0.5, y1:0, x2:1, "
-                                      "y2:0, stop:0 rgba(255, 2, 2, 255), stop:1 rgba(255, 120, 120, 255));")
+
+        self.timerframe.setStyleSheet(f"""border-radius:40px; background:none; border:2px solid;
+                                          border-color: rgba(255, 255, 255, 255)""")
 
         # Set grid layout
 
@@ -280,7 +300,7 @@ class Room(QtWidgets.QFrame):
         self.lcdtime.setStyleSheet("color: rgba(255, 255, 255, 200);border:none;")
         font = QtGui.QFont()
         font.setFamily("Roboto Cn")
-        font.setPointSize(35)
+        font.setPixelSize(45)
         self.lcdtime.setFont(font)
 
         # Set grid layout
@@ -317,7 +337,7 @@ class Room(QtWidgets.QFrame):
 
         font = QtGui.QFont()
         font.setFamily("Roboto")
-        font.setPointSize(10)
+        font.setPixelSize(13)
         font.setBold(True)
         font.setWeight(75)
         self.start.setFont(font)
@@ -339,7 +359,7 @@ class Room(QtWidgets.QFrame):
 
         font = QtGui.QFont()
         font.setFamily("Roboto")
-        font.setPointSize(10)
+        font.setPixelSize(13)
         font.setBold(True)
         font.setWeight(75)
         self.stop.setFont(font)
@@ -350,6 +370,9 @@ class Room(QtWidgets.QFrame):
                                 "background-color: rgba(0, 0, 0, 120);\n""}")
 
         self.horizontalLayout_11.addWidget(self.stop)
+
+        # Initialize the button as disabled:
+        self.stop.setEnabled(False)
 
         ################################################################################################################
         # Create the reset button
@@ -362,7 +385,7 @@ class Room(QtWidgets.QFrame):
 
         font = QtGui.QFont()
         font.setFamily("Roboto")
-        font.setPointSize(10)
+        font.setPixelSize(13)
         font.setBold(True)
         font.setWeight(75)
         self.reset.setFont(font)
@@ -388,6 +411,9 @@ class Room(QtWidgets.QFrame):
         self.horizontalLayout_6.setSpacing(0)
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
 
+        # Initialize the button as disabled:
+        self.reset.setEnabled(False)
+
         ################################################################################################################
         # Create the minus time button
         #################################################################################################################
@@ -399,7 +425,7 @@ class Room(QtWidgets.QFrame):
 
         font = QtGui.QFont()
         font.setFamily("Roboto")
-        font.setPointSize(14)
+        font.setPixelSize(13)
         font.setBold(True)
         font.setWeight(75)
         self.minus.setFont(font)
@@ -420,13 +446,37 @@ class Room(QtWidgets.QFrame):
 
         font = QtGui.QFont()
         font.setFamily("Roboto Cn")
-        font.setPointSize(10)
+        font.setPixelSize(13)
         self.textenter.setFont(font)
-        self.textenter.setStyleSheet("border-radius:5px;\n""background-color: rgba(0, 0, 0, 120); \n"
+        self.textenter.setStyleSheet("border-radius:5px;\n" 
+                                     "background-color: rgba(0, 0, 0, 120); \n"
                                      "color: rgb(255, 255, 255);")
 
         self.textenter.setAlignment(QtCore.Qt.AlignCenter)
         self.horizontalLayout_6.addWidget(self.textenter)
+
+        # Create a layout inside the textenter:
+        self.textenterlay = QtWidgets.QHBoxLayout(self.textenter)
+        self.textenterlay.setContentsMargins(15, 0,0, 0)
+        self.textenterlabel = QtWidgets.QLabel(self.textenter)
+        self.textenterlay.addWidget(self.textenterlabel)
+        self.textenterlabel.setStyleSheet("background:none")
+        self.textenter.setFont(font)
+
+
+        # Create an input mask:
+        self.textenter.setText("00:00:00")
+        self.textenter.setInputMask("99:99:99")
+
+        # Define the initial input validator
+        self.reg_ex = QtCore.QRegExp("[0-2]{1}[0-3]{1}"+":"+"[0-5]{1}[0-9]{1}"+":"+"[0-5]{1}[0-9]{1}")
+        self.input_validator1 = QtGui.QRegExpValidator(self.reg_ex, self.textenter)
+        self.textenter.setValidator(self.input_validator1)
+
+        # Define the input validator for when the timer is running:
+        self.reg_ex2 = QtCore.QRegExp("[0-9]{2}")
+        self.input_validator2 = QtGui.QRegExpValidator(self.reg_ex2, self.textenter)
+
 
         ################################################################################################################
         # Create the plus time button
@@ -439,7 +489,7 @@ class Room(QtWidgets.QFrame):
 
         font = QtGui.QFont()
         font.setFamily("Roboto")
-        font.setPointSize(14)
+        font.setPixelSize(13)
         font.setBold(True)
         font.setWeight(75)
         font.setKerning(False)
@@ -453,6 +503,8 @@ class Room(QtWidgets.QFrame):
         self.verticalLayout_44.addWidget(self.addtimeframe)
         self.verticalLayout_4.addWidget(self.timer)
 
+        self.plus.clicked.connect(lambda: self.ui.overview.patients.addTime(self.ui.overview.navninput.text(),self.textenter.text()))
+
 ################################################################################################################
 # This one thing I have no idea of what does
 #################################################################################################################
@@ -463,83 +515,134 @@ class Room(QtWidgets.QFrame):
 # Translate protocol
 #################################################################################################################
 
-        _translate = QtCore.QCoreApplication.translate
-        self.label_2.setText(_translate("MainWindow", "Injeksjonsrom 1"))
-        self.pasientlabel.setText(_translate("MainWindow", "Pasient:"))
-        self.pasientsvarlabel.setText(_translate("MainWindow", "Magnus Støleggen"))
-        self.statuslabel.setText(_translate("MainWindow", "Status"))
-        self.statussvarlabel.setText(_translate("MainWindow", "Under behandling"))
-        self.nestebehlabel.setText(_translate("MainWindow", "Neste behandling"))
-        self.nestebehsvarlabel.setText(_translate("MainWindow", "PET-Scan - 14:45"))
-        self.start.setText(_translate("MainWindow", "START"))
-        self.stop.setText(_translate("MainWindow", "STOP"))
-        self.reset.setText(_translate("MainWindow", "RESET"))
-        self.minus.setText(_translate("MainWindow", "-"))
-        self.plus.setText(_translate("MainWindow", "+"))
+        self.label_2.setText(self._translate("MainWindow", "Injeksjonsrom 1"))
+        self.pasientlabel.setText(self._translate("MainWindow", "Pasient:"))
+        self.pasientsvarlabel.setText(self._translate("MainWindow", "Magnus Støleggen"))
+        self.statuslabel.setText(self._translate("MainWindow", "Status"))
+        self.statussvarlabel.setText(self._translate("MainWindow", "Under behandling"))
+        self.nestebehlabel.setText(self._translate("MainWindow", "Neste behandling"))
+        self.nestebehsvarlabel.setText(self._translate("MainWindow", "PET-Scan - 14:45"))
+        self.start.setText(self._translate("MainWindow", "START"))
+        self.stop.setText(self._translate("MainWindow", "STOP"))
+        self.reset.setText(self._translate("MainWindow", "RESET"))
+        self.minus.setText(self._translate("MainWindow", "-"))
+        self.plus.setText(self._translate("MainWindow", "+"))
 
         ########### Set start button
 
-        self.start.clicked.connect(lambda:timer('start'))
-        self.lcdtime.setText(_translate("MainWindow", "0:00:00"))
 
-        def timer(work):
+        self.lcdtime.setText(self._translate("MainWindow", "00:00:00"))
 
-                #### Define what to do if the start button is pressed:
+    # Define a function that tells the timer how to operate:
+    def timerFunctions(self, work):
 
-                if work == 'start':
+        # When the start-button is pressed:
+        if work == 'start' and self.textenter.text() != "00:00:00":
 
-                        self.timer_running = True
+            # Set the state of the timer to Running
+            self.timer_running = True
 
-                        if self.timer_counter_num == 0:
+            # Disable and enable buttons
+            self.start.setEnabled(False)
+            self.stop.setEnabled(True)
+            self.reset.setEnabled((False))
 
-                                timer_time_str = self.textenter.text()
-                                hours, minutes, seconds = timer_time_str.split(':')
-                                minutes = int(minutes) + (int(hours) * 60)
-                                seconds = int(seconds) + (minutes * 60)
-                                self.timer_counter_num = self.timer_counter_num + seconds
-                        #print('hei')
-                        timer_counter()
+             # If the timer starts for the first time, create timer-thread and fetch the time from the entrybox
+            if self.timer_counter_num == 0:
 
-                # elif work == 'stop':
-                #         self.timer_running = False
-                #         self.start.configure(state='normal')
-                #         self.stop.configure(state='disabled')
-                #         self.reset.configure(state='normal')
-                #
-                # elif work == 'reset':
-                #         self.timer_running = False
-                #         self.timer_counter_num = 0
+                #Fetch time from entrybox
+                timer_time_str = self.textenter.text()
+                hours, minutes, seconds = timer_time_str.split(':')
+                minutes = int(minutes) + (int(hours) * 60)
+                seconds = int(seconds) + (minutes * 60)
+                self.timer_counter_num = self.timer_counter_num + seconds
 
-        def timer_counter():
-                def count():
-
-                        if self.timer_running:
-
-                                if self.timer_counter_num == 0:
-
-                                        self.timer_running = False
-                                        self.timer('reset')
-                                        display = '00:00:00'
-
-                                else:
-                                        tt = datetime.timedelta(seconds=self.timer_counter_num)
-                                        display = tt
-                                        self.timer_counter_num -= 1
+                # Convert the entrybox to plus/minus time:
+                self.textenter.setInputMask("99")
+                self.textenterlabel.setText(self._translate("MainWindow", "Min ±"))
+                self.textenter.setText(self._translate("MainWindow", '00'))
+                self.textenter.setValidator(self.input_validator2)
 
 
-                        self.lcdtime.setText(_translate("MainWindow", f'{display}'))
-                        self.timer = QtCore.QTimer()
-                        self.timer.timeout.connect(count)
-                        self.timer.setInterval(1000)  # 1000ms = 1s
-                        self.timer.start()
 
+                # Start the count() function:
+                self.count()
+            else:
+                self.count()
 
-                count()
+        # When the stop-button is pressed:
+        elif work == 'stop':
 
+            # Set timer state to Off
+            self.timer_running = False
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    ui = Room()
-    ui.show()
-    sys.exit(app.exec_())
+            # Disable/Enable buttons
+            self.start.setEnabled(True)
+            self.stop.setEnabled(False)
+            self.reset.setEnabled(True)
+
+            # Stop the count() function:
+            self.timer.stop()
+
+        # When the reset-button is pressed:
+        elif work == 'reset':
+
+            # If the timer ran out, stop the timer:
+            if self.timer_counter_num == 0:
+                self.timer.stop()
+                self.timer_running = False
+
+            # If the timer was manually reset:
+            else:
+                # Reset the time
+                self.timer_counter_num = 0
+
+            # Display "00:00:00"
+            self.lcdtime.setText(self._translate("MainWindow", '00:00:00'))
+
+            #Enable/Disable buttons
+            self.start.setEnabled(True)
+            self.reset.setEnabled(False)
+
+            # Reset the entrybox:
+            self.textenter.setText(self._translate("MainWindow", '00:00:00'))
+            self.textenter.setInputMask("99:99:99")
+
+            # Convert the textenter back to regular time format
+            self.textenter.setInputMask("99:99:99")
+            self.textenter.setText(self._translate("MainWindow", "00:00:00"))
+            self.textenterlabel.setText(self._translate("MainWindow", ""))
+            self.textenter.setValidator(self.input_validator1)
+
+    # Define a function that runs once a seconnd whenever the timer is on:
+    def count(self):
+
+        # Check if timer is running:
+        if self.timer_running == True:
+
+            # Run the reset function when time runs out:
+            if self.timer_counter_num == 0:
+
+                self.timerFunctions('reset')
+                return
+
+            # If time hasn't run out, set display variable to the current time:
+            else:
+
+                display = datetime.timedelta(seconds=self.timer_counter_num)
+                self.timer_counter_num -= 1
+
+        # Display the current time
+        self.lcdtime.setText(self._translate("MainWindow", f'{display}'))
+
+        # Create a thread that can run the count() function once a second:
+        # Create a thread that can run the count() function once a second:
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.count)
+        self.timer.setInterval(1000)  # 1000ms = 1s
+
+        # Run the count() function once a second
+        self.timer.start()
+
+    def addTime(self, time):
+        

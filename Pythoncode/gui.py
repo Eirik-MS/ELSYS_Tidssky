@@ -1,15 +1,17 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 import Bakgrunnsbilde
 from room import Room
 from overview import Overview
 from addpatient import Addpatient
-
+from PyQt5 import QtCore, QtGui, QtWidgets
+from Classes import Patients
+import sympy
 
 #### The main structure of the Graphical User Interface
 
 class GUI(object):
 
+    # Setup the GUI
     def setupUi(self, MainWindow):
 
 #### Set the initial size of the main window and remove the window frames
@@ -24,6 +26,7 @@ class GUI(object):
 ########################################################################################################################
 
         _translate = QtCore.QCoreApplication.translate
+        self._translate = QtCore.QCoreApplication.translate
 
 ########################################################################################################################
 # Make the frame that is going to serve as the main window
@@ -105,7 +108,7 @@ class GUI(object):
 
         font = QtGui.QFont()
         font.setFamily("Roboto Cn")
-        font.setPointSize(15)
+        font.setPixelSize(16)
         font.setBold(True)
         font.setItalic(False)
         font.setWeight(75)
@@ -236,32 +239,35 @@ class GUI(object):
         # Create five rooms. The room object is imported from it's own class.
         ################################################################################################################
 
-        #### Make separate variables for each room so they can be modified independently
+        #### Make separate variables for each room so they can be modified independently, and add these to a dictionary
 
-        self.room1 = Room()
-        self.room2 = Room()
-        self.room3 = Room()
-        self.room4 = Room()
-        self.room5 = Room()
+        self.rooms = {}
+
+        self.rooms["room1"] = Room()
+        self.rooms["room2"] = Room()
+        self.rooms["room3"] = Room()
+        self.rooms["room4"] = Room()
+        self.rooms["room5"] = Room()
 
         #### Add each room to the layout of self.Rooms
 
-        self.horizontalLayout_5.addWidget(self.room1)
-        self.horizontalLayout_5.addWidget(self.room2)
-        self.horizontalLayout_5.addWidget(self.room3)
-        self.horizontalLayout_5.addWidget(self.room4)
-        self.horizontalLayout_5.addWidget(self.room5)
+        self.horizontalLayout_5.addWidget(self.rooms["room1"])
+        self.horizontalLayout_5.addWidget(self.rooms["room2"])
+        self.horizontalLayout_5.addWidget(self.rooms["room3"])
+        self.horizontalLayout_5.addWidget(self.rooms["room4"])
+        self.horizontalLayout_5.addWidget(self.rooms["room5"])
 
         #### Change the titles of each room (Room nr. 1 already has the correct title)
 
-        self.room2.label_2.setText(_translate("MainWindow", "Injeksjonsrom 2"))
-        self.room3.label_2.setText(_translate("MainWindow", "Injeksjonsrom 3"))
-        self.room4.label_2.setText(_translate("MainWindow", "Injeksjonsrom 4"))
-        self.room5.label_2.setText(_translate("MainWindow", "PET-Scan"))
+        self.rooms["room2"].label_2.setText(_translate("MainWindow", "Injeksjonsrom 2"))
+        self.rooms["room3"].label_2.setText(_translate("MainWindow", "Injeksjonsrom 3"))
+        self.rooms["room4"].label_2.setText(_translate("MainWindow", "Injeksjonsrom 4"))
+        self.rooms["room5"].label_2.setText(_translate("MainWindow", "PET-Scan"))
 
-        #### Countdown display
-
-
+        # Configure start-buttons to color function:
+        for i in range(1,6):
+            self.rooms["room"+f"{i}"].start.clicked.connect(lambda: self.timerColors())
+            self.rooms["room"+f"{i}"].textenter.returnPressed.connect(lambda: self.timerColors())
 
         ################################################################################################################
         # Create the frame that will contain the other contents in the application
@@ -278,8 +284,6 @@ class GUI(object):
 
         self.verticalLayout_3.addWidget(self.overview)
         self.verticalLayout.addWidget(self.middle)
-
-        self.overview.verticalLayout_70.addWidget(Addpatient(self.overview.scrollingframe))
 
 ########################################################################################################################
 # Create the bottom of the three main frames. This frame will contain the credits and the widget to resize the frame
@@ -356,10 +360,26 @@ class GUI(object):
 
         self.stretch.setStyleSheet("border-image:none;  background:none;")
 
-        #### Set grid layout
+        #### Add the frame to a layout
 
         self.horizontalLayout.addWidget(self.stretch)
         self.verticalLayout.addWidget(self.bottom)
+
+        self.stretchLay = QtWidgets.QHBoxLayout(self.stretch)
+        self.stretchLay.setContentsMargins(0, 0, 0, 0)
+        self.stretchLay.setSpacing(0)
+
+        ################################################################################################################
+        # Create the sizeGrip widget and add it to the layout
+        ################################################################################################################
+
+        self.sizeGrip = QtWidgets.QSizeGrip(self.stretch)
+        self.stretchLay.addWidget(self.sizeGrip)
+
+
+
+
+
 
 ########################################################################################################################
 # Something i'm not quite sure what does, but needs to be here for everything to work
@@ -378,7 +398,91 @@ class GUI(object):
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+    # Create a function to check if all timers are on or off
+    def timersOff(self):
 
+        self.totalTimerCount = (self.rooms["room1"].timer_counter_num + self.rooms["room2"].timer_counter_num +
+                                self.rooms["room3"].timer_counter_num + self.rooms["room4"].timer_counter_num +
+                                self.rooms["room5"].timer_counter_num)
+        if self.totalTimerCount == 0:
+            return True
+        else:
+            return False
+
+    #Create a timer that runs the alphaWave function at a custom framerate
+    def timerColors(self):
+
+        if self.timersOff() == False:
+            # # Set the framerate of the color animation
+            self.framerate = 20
+
+            # Duration of each pulse in second:
+            self.seconds = 1  # seconds
+            self.period = (2 * sympy.pi) / (self.framerate * self.seconds)
+            self.sineValue = 3 * sympy.pi / 2
+
+            # Define the biggest alpha value
+            self.alphaMax = 255
+
+            # Create a thread that can run the color animation:
+            self.colorTimer = QtCore.QTimer()
+            self.colorTimer.timeout.connect(lambda: self.alphaWave())
+
+            # Apply the framerate
+            self.colorTimer.setInterval(int(1000 / self.framerate))
+            self.colorTimer.start()
+
+    # Function that creates a sinewave
+    def alphaWave(self):
+
+        greenTime   = 30 * 60  # 30 minutes
+        redTime     = 10 * 60  # 10 minutes
+        pulse = sympy.sin(self.sineValue)
+        pulse = float((pulse + 1) / 2)
+        self.sineValue += self.period
+        self.alpha = int(self.alphaMax * pulse)
+
+        if self.sineValue == 7*sympy.pi/2:
+            self.sineValue = 3*sympy.pi/2
+
+        if self.timersOff() == True:
+            self.colorTimer.stop()
+
+        self.changeColors()
+
+
+        greenTime   = 30 * 60  # 30 minutes
+        redTime     = 10 * 60  # 10 minutes
+
+    # Change the colors of the timerframe in according to the alphaWave
+    def changeColors(self):
+        # Change the color of all rooms in synchronization
+        for i in range(1,6):
+
+                if self.rooms["room"+f"{i}"].timer_counter_num >= greenTime:
+
+                    self.rooms["room"+f"{i}"].timerframe.setStyleSheet(f"""  border-radius:40px; background:none; border:2px solid;
+                                                                border-color: qlineargradient(spread:reflect, x1:0.5, y1:0, x2:1,
+                                                                y2:0, stop:0 rgba(0, {self.alpha}, 0, {self.alpha / 2}), 
+                                                                stop:1 rgba(120, 255, 120, {(self.alpha + 200) / 2}));""")
+
+                elif self.rooms["room"+f"{i}"].timer_counter_num >= redTime:
+
+                    self.rooms["room"+f"{i}"].timerframe.setStyleSheet(f"""  border-radius:40px; background:none; border:2px solid;
+                                                                border-color: qlineargradient(spread:reflect, x1:0.5, y1:0, x2:1,
+                                                                y2:0, stop:0 rgba({self.alpha}, 255, 0, {self.alpha / 2}), 
+                                                                stop:1 rgba(255, 255, 0, {(self.alpha + 200) / 2}));""")
+
+                elif self.rooms["room"+f"{i}"].timer_counter_num <= redTime and self.rooms["room"+f"{i}"].timer_counter_num > 0:
+
+                    self.rooms["room"+f"{i}"].timerframe.setStyleSheet(f"""  border-radius:40px; background:none; border:2px solid;
+                                                    border-color: qlineargradient(spread:reflect, x1:0.5, y1:0, x2:1,
+                                                    y2:0, stop:0 rgba({self.alpha}, 0, 0, {self.alpha / 2}), 
+                                                    stop:1 rgba(255, 120, 120, {(self.alpha + 200) / 2}));""")
+
+                elif self.rooms["room"+f"{i}"].timer_counter_num == 0:
+                    self.rooms["room"+f"{i}"].timerframe.setStyleSheet(f"""border-radius:40px; background:none; border:2px solid;
+                                                                          border-color: rgb(255, 255, 255, 255);""")
 
 
 
