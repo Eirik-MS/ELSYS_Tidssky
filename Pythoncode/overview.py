@@ -140,10 +140,11 @@ class Overview(QtWidgets.QFrame):
 
         # Create the scrolling frame layout
         self.scrollframeLay = QtWidgets.QVBoxLayout(self.scrollframe)
-        self.scrollframeLay.setContentsMargins(15, 3, 15, 3)
+        self.scrollframeLay.setContentsMargins(15, 8, 15, 8)
         self.scrollframeLay.setSpacing(3)
         self.scrollframeLay.addItem(QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding))
         self.scrollframeLay.setObjectName("scrollframeLay")
+        self.scrollframeLay.setAlignment(QtCore.Qt.AlignTop)
         self.scrollwidgetLay.addWidget(self.scrollframe)
         self.scrollarea.setWidget(self.scrollwidget)
         self.contentsLay.addWidget(self.scrollarea)
@@ -324,12 +325,6 @@ class Overview(QtWidgets.QFrame):
 
         QtCore.QMetaObject.connectSlotsByName(self)
 
-    # Function for adding time to a patient
-    def addTime(self, name, addTime):
-        _translate = QtCore.QCoreApplication.translate
-        self.patients.addTime(name, addTime)
-        self.patients.dict[name][2].tid.setText(_translate("Form", f"{self.patients.dict[name][0]}"))
-
     # Function for adding another patient to the schedule
     def addPatient(self, name, time, room):
 
@@ -340,7 +335,7 @@ class Overview(QtWidgets.QFrame):
             self.patients.dict[name][2].tid.setText(self._translate("Form", f"{self.patients.dict[name][0]}"))
             self.patients.dict[name][2].rom.setText(self._translate("Form", f"{self.patients.dict[name][1]}"))
             #
-            self.scrollframeLay.addWidget(self.patients.dict[name][2])
+            self.scrollframeLay.insertWidget(self.scrollframeLay.count() - 1, self.patients.dict[name][2])
             #
             self.navninput.setText('')
             self.tidinput.setText('')
@@ -353,5 +348,6 @@ class Overview(QtWidgets.QFrame):
             del self.patients.dict[name]
             self.navninput.setText('')
             self.tidinput.setText('')
+
 
 

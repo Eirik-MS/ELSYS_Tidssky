@@ -117,12 +117,14 @@ class Room(QtWidgets.QFrame):
 
         self.pasientframe = QtWidgets.QFrame(self.pasientstatus)
         self.pasientframe.setStyleSheet("border-radius:0px;""border-top-left-radius:10px;""border-bottom-left-radius:10px;")
+        self.pasientframe.setMaximumSize(75,85)
 
         # Set grid layout
 
         self.verticalLayout_7 = QtWidgets.QVBoxLayout(self.pasientframe)
-        self.verticalLayout_7.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_7.setContentsMargins(8, 0, 0, 0)
         self.verticalLayout_7.setSpacing(0)
+
 
         # Create the label that displays "Pasient:"
 
@@ -132,7 +134,7 @@ class Room(QtWidgets.QFrame):
         font.setPixelSize(13)
         self.pasientlabel.setFont(font)
         self.pasientlabel.setStyleSheet("background:none;""color: rgb(217, 217, 217);")
-        self.verticalLayout_7.addWidget(self.pasientlabel, 0, QtCore.Qt.AlignHCenter)
+        self.verticalLayout_7.addWidget(self.pasientlabel, 0, QtCore.Qt.AlignLeft)
         self.gridLayout.addWidget(self.pasientframe, 0, 0, 1, 1)
 
         # Create the frame with the patients's name/pseudonym
@@ -140,8 +142,7 @@ class Room(QtWidgets.QFrame):
         self.pasientsvarframe = QtWidgets.QFrame(self.pasientstatus)
         self.pasientsvarframe.setStyleSheet("border-radius:0px;""border-top-right-radius:10px;""border-bottom-right-radius:10px;")
         self.verticalLayout_8 = QtWidgets.QVBoxLayout(self.pasientsvarframe)
-        self.verticalLayout_8.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_8.setSpacing(0)
+        self.verticalLayout_8.setContentsMargins(8, 3, 0, 0)
 
         # Create the label with the patient's name/pseudonym
 
@@ -151,7 +152,7 @@ class Room(QtWidgets.QFrame):
         font.setPixelSize(13)
         self.pasientsvarlabel.setFont(font)
         self.pasientsvarlabel.setStyleSheet("background:none;""color: rgb(255, 255, 255);")
-        self.pasientsvarlabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.pasientsvarlabel.setAlignment(QtCore.Qt.AlignLeft)
         self.verticalLayout_8.addWidget(self.pasientsvarlabel)
         self.gridLayout.addWidget(self.pasientsvarframe, 0, 1, 1, 1)
 
@@ -166,7 +167,7 @@ class Room(QtWidgets.QFrame):
         # Set grid layout
 
         self.verticalLayout_9 = QtWidgets.QVBoxLayout(self.statusframe)
-        self.verticalLayout_9.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_9.setContentsMargins(8, 0, 0, 0)
         self.verticalLayout_9.setSpacing(0)
 
         # Create label to display "Status:"
@@ -177,7 +178,7 @@ class Room(QtWidgets.QFrame):
         font.setPixelSize(13)
         self.statuslabel.setFont(font)
         self.statuslabel.setStyleSheet("background:none;""color: rgb(217, 217, 217);")
-        self.verticalLayout_9.addWidget(self.statuslabel, 0, QtCore.Qt.AlignHCenter)
+        self.verticalLayout_9.addWidget(self.statuslabel, 0, QtCore.Qt.AlignLeft)
         self.gridLayout.addWidget(self.statusframe, 1, 0, 1, 1)
 
         # Create the frame to display "<patient status>"
@@ -188,7 +189,7 @@ class Room(QtWidgets.QFrame):
         # Set grid layout
 
         self.verticalLayout_10 = QtWidgets.QVBoxLayout(self.statussvarframe)
-        self.verticalLayout_10.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_10.setContentsMargins(8, 3, 0, 0)
         self.verticalLayout_10.setSpacing(0)
 
         # Create the label to display "<patient status>"
@@ -199,11 +200,11 @@ class Room(QtWidgets.QFrame):
         font.setPixelSize(13)
         self.statussvarlabel.setFont(font)
         self.statussvarlabel.setStyleSheet("background:none;""color: rgb(255, 255, 255);")
-        self.statussvarlabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.statussvarlabel.setAlignment(QtCore.Qt.AlignLeft)
 
         # Set grid layout
 
-        self.verticalLayout_10.addWidget(self.statussvarlabel)
+        self.verticalLayout_10.addWidget(self.statussvarlabel, 0, QtCore.Qt.AlignLeft)
         self.gridLayout.addWidget(self.statussvarframe, 1, 1, 1, 1)
 
         ################################################################################################################
@@ -216,7 +217,7 @@ class Room(QtWidgets.QFrame):
         # Set grid layout
 
         self.verticalLayout_11 = QtWidgets.QVBoxLayout(self.nestebeh)
-        self.verticalLayout_11.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_11.setContentsMargins(8, 0, 0, 0)
         self.verticalLayout_11.setSpacing(0)
 
         # Create the label to display "Neste behandling:"
@@ -230,7 +231,7 @@ class Room(QtWidgets.QFrame):
 
         # Set grid layout
 
-        self.verticalLayout_11.addWidget(self.nestebehlabel, 0, QtCore.Qt.AlignHCenter)
+        self.verticalLayout_11.addWidget(self.nestebehlabel, 0, QtCore.Qt.AlignLeft)
         self.gridLayout.addWidget(self.nestebeh, 2, 0, 1, 1)
 
         # Create frame to display "<next treatment>"
@@ -241,7 +242,7 @@ class Room(QtWidgets.QFrame):
         # Set grid layout
 
         self.verticalLayout_12 = QtWidgets.QVBoxLayout(self.nestebehsvarframe)
-        self.verticalLayout_12.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout_12.setContentsMargins(8, 0, 0, 0)
         self.verticalLayout_12.setSpacing(0)
         self.verticalLayout_12.setObjectName("verticalLayout_12")
 
@@ -256,7 +257,7 @@ class Room(QtWidgets.QFrame):
 
         # Set grid layout
 
-        self.verticalLayout_12.addWidget(self.nestebehsvarlabel, 0, QtCore.Qt.AlignHCenter)
+        self.verticalLayout_12.addWidget(self.nestebehsvarlabel, 0, QtCore.Qt.AlignLeft)
         self.gridLayout.addWidget(self.nestebehsvarframe, 2, 1, 1, 1)
         self.verticalLayout_4.addWidget(self.pasientstatus)
 
@@ -429,11 +430,22 @@ class Room(QtWidgets.QFrame):
         font.setBold(True)
         font.setWeight(75)
         self.minus.setFont(font)
-        self.minus.setStyleSheet("QPushButton{\n""border:1px solid;\n""border-color: rgb(39, 39, 39);\n"
-                                 "border-radius:0px;\n""border-radius:15px;\n""background-color: rbg(0,0,0,80);\n"
-                                 "}\n""QPushButton:hover{\n""background-color: rgba(255, 2, 2, 100);\n""}")
+        self.minus.setStyleSheet(""" 
+                                    QPushButton:disabled   {    background-color:   rgba(255, 255, 255, 80)         }
+                                    QPushButton:hover      {    background-color:   rgba(0, 0, 0, 120);             }
+                                    QPushButton:pressed    {    background-color:   rgba(0, 0, 0, 200);             } 
+                                    QPushButton            {    background-color:   rgb(0,0,0,80); 
+                                                                border-color:       rgb(39, 39, 39);
+                                                                border:             1px solid;   
+                                                                border-radius:      0px;  
+                                                                border-radius:      15px;
+                                                                color:              rgba(0, 0, 0, 255)                }      
+                                """)
 
         self.horizontalLayout_6.addWidget(self.minus)
+
+        # Initialize button as disabled:
+        self.minus.setEnabled(False)
 
         ################################################################################################################
         # Create the text enter widget
@@ -477,6 +489,9 @@ class Room(QtWidgets.QFrame):
         self.reg_ex2 = QtCore.QRegExp("[0-9]{2}")
         self.input_validator2 = QtGui.QRegExpValidator(self.reg_ex2, self.textenter)
 
+        # Initialize enterbox as disabled
+        self.textenter.setEnabled(False)
+
 
         ################################################################################################################
         # Create the plus time button
@@ -494,16 +509,26 @@ class Room(QtWidgets.QFrame):
         font.setWeight(75)
         font.setKerning(False)
         self.plus.setFont(font)
-        self.plus.setStyleSheet("QPushButton{\n""border:1px solid;\n""border-color: rgb(39, 39, 39);\n"
-                                "border-radius:0px;\n""border-radius:15px;\n""background-color: rgb(0,0,0,80);\n"
-                                "}\n""QPushButton:hover{\n""background-color: rgba(0, 255, 0, 100);\n""};")
+        self.plus.setStyleSheet(""" 
+                                    QPushButton:disabled   {    background-color:   rgba(255, 255, 255, 80)         }
+                                    QPushButton:hover      {    background-color:   rgba(0, 0, 0, 120);             }
+                                    QPushButton:pressed    {    background-color:   rgba(0, 0, 0, 200);             } 
+                                    QPushButton            {    background-color:   rgb(0,0,0,80); 
+                                                                border-color:       rgb(39, 39, 39);
+                                                                border:             1px solid;   
+                                                                border-radius:      0px;  
+                                                                border-radius:      15px;
+                                                                color:              rgba(0, 0, 0, 255)                }      
+                                """)
+
         self.plus.setAutoRepeatDelay(0)
 
         self.horizontalLayout_6.addWidget(self.plus)
         self.verticalLayout_44.addWidget(self.addtimeframe)
         self.verticalLayout_4.addWidget(self.timer)
 
-        self.plus.clicked.connect(lambda: self.ui.overview.patients.addTime(self.ui.overview.navninput.text(),self.textenter.text()))
+        # Initialize as diabled
+        self.plus.setEnabled(False)
 
 ################################################################################################################
 # This one thing I have no idea of what does
@@ -517,27 +542,29 @@ class Room(QtWidgets.QFrame):
 
         self.label_2.setText(self._translate("MainWindow", "Injeksjonsrom 1"))
         self.pasientlabel.setText(self._translate("MainWindow", "Pasient:"))
-        self.pasientsvarlabel.setText(self._translate("MainWindow", "Magnus Støleggen"))
-        self.statuslabel.setText(self._translate("MainWindow", "Status"))
-        self.statussvarlabel.setText(self._translate("MainWindow", "Under behandling"))
-        self.nestebehlabel.setText(self._translate("MainWindow", "Neste behandling"))
-        self.nestebehsvarlabel.setText(self._translate("MainWindow", "PET-Scan - 14:45"))
+        self.pasientsvarlabel.setText(self._translate("MainWindow", ""))
+        self.statuslabel.setText(self._translate("MainWindow", "Status:"))
+        self.statussvarlabel.setText(self._translate("MainWindow", ""))
+        self.nestebehlabel.setText(self._translate("MainWindow", "PET-Scan:"))
+        self.nestebehsvarlabel.setText(self._translate("MainWindow", ""))
         self.start.setText(self._translate("MainWindow", "START"))
         self.stop.setText(self._translate("MainWindow", "STOP"))
         self.reset.setText(self._translate("MainWindow", "RESET"))
         self.minus.setText(self._translate("MainWindow", "-"))
         self.plus.setText(self._translate("MainWindow", "+"))
 
-        ########### Set start button
-
+        ########### Initialize the timer display
 
         self.lcdtime.setText(self._translate("MainWindow", "00:00:00"))
 
-    # Define a function that tells the timer how to operate:
+        #### Initialize variable to know treatment has not started
+        self.treatmentstarted = False
+
+    # Tells the timer how to operate
     def timerFunctions(self, work):
 
         # When the start-button is pressed:
-        if work == 'start' and self.textenter.text() != "00:00:00":
+        if work == 'start' and self.textenter.text() != "00:00:00" and len(self.textenter.text()) != 2:
 
             # Set the state of the timer to Running
             self.timer_running = True
@@ -546,6 +573,9 @@ class Room(QtWidgets.QFrame):
             self.start.setEnabled(False)
             self.stop.setEnabled(True)
             self.reset.setEnabled((False))
+
+            # variable to know treatment has/has not started yet
+            self.treatmentstarted = True
 
              # If the timer starts for the first time, create timer-thread and fetch the time from the entrybox
             if self.timer_counter_num == 0:
@@ -562,13 +592,22 @@ class Room(QtWidgets.QFrame):
                 self.textenterlabel.setText(self._translate("MainWindow", "Min ±"))
                 self.textenter.setText(self._translate("MainWindow", '00'))
                 self.textenter.setValidator(self.input_validator2)
-
-
-
                 # Start the count() function:
                 self.count()
             else:
                 self.count()
+
+            # Disable plus and minus buttons if no patient in the room and enable if patient in room
+            # Also disable enterbox
+            if self.pasientsvarlabel.text() == "":
+                self.plus.setEnabled(False)
+                self.minus.setEnabled(False)
+                self.textenter.setText(self._translate("MainWindow", ""))
+                self.textenterlabel.setText(self._translate("MainWindow", ""))
+            else:
+                self.plus.setEnabled(True)
+                self.minus.setEnabled(True)
+                self.textenter.setEnabled(False)
 
         # When the stop-button is pressed:
         elif work == 'stop':
@@ -603,8 +642,11 @@ class Room(QtWidgets.QFrame):
             #Enable/Disable buttons
             self.start.setEnabled(True)
             self.reset.setEnabled(False)
+            self.plus.setEnabled(False)
+            self.minus.setEnabled(False)
 
             # Reset the entrybox:
+            self.textenter.setEnabled(True)
             self.textenter.setText(self._translate("MainWindow", '00:00:00'))
             self.textenter.setInputMask("99:99:99")
 
@@ -614,7 +656,8 @@ class Room(QtWidgets.QFrame):
             self.textenterlabel.setText(self._translate("MainWindow", ""))
             self.textenter.setValidator(self.input_validator1)
 
-    # Define a function that runs once a seconnd whenever the timer is on:
+
+    # Counts down once a second
     def count(self):
 
         # Check if timer is running:
@@ -644,5 +687,36 @@ class Room(QtWidgets.QFrame):
         # Run the count() function once a second
         self.timer.start()
 
-    def addTime(self, time):
-        
+    # Add time to the display
+    def addTime(self):
+
+        timeint = int(self.textenter.text())
+        sec     = timeint * 60
+
+        if self.timer_counter_num + sec >= 86400:
+            pass
+        else:
+            self.timer_counter_num += sec
+            display = datetime.timedelta(seconds=self.timer_counter_num)
+            self.lcdtime.setText(self._translate("MainWindow", f'{display}'))
+
+    # Subtract time from the display
+    def negTime(self):
+
+        timeint = int(self.textenter.text())
+        sec = timeint * 60
+
+        if self.timer_counter_num - sec < 0:
+
+            self.timerFunctions('reset')
+            return
+
+        else:
+
+            self.timer_counter_num -= sec
+            display = datetime.timedelta(seconds=self.timer_counter_num)
+
+        self.lcdtime.setText(self._translate("MainWindow", f'{display}'))
+
+        #self.textenter.setText(self._translate("MainWindow", "00"))
+

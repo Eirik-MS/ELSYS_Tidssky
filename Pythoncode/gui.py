@@ -6,15 +6,24 @@ from addpatient import Addpatient
 from PyQt5 import QtCore, QtGui, QtWidgets
 from Classes import Patients
 import sympy
+import time
+import datetime
 
 #### The main structure of the Graphical User Interface
 
 class GUI(object):
 
+    def __init__(self):
+
+        # Definere hvor lang tid det er mellom to behandlinger på samme injeksjonsrom
+        self.tidMellomInjeksjoner = 30
+
     # Setup the GUI
     def setupUi(self, MainWindow):
 
-#### Set the initial size of the main window and remove the window frames
+########################################################################################################################
+#   Set the initial size of the main window and remove the window frames
+########################################################################################################################
 
         MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         MainWindow.setAttribute(QtCore.Qt.WA_TranslucentBackground)
@@ -58,7 +67,7 @@ class GUI(object):
         self.verticalLayout.setSpacing(0)
 
 ########################################################################################################################
-# Creating the top frame
+#   Creating the top frame
 ########################################################################################################################
 
         self.top = QtWidgets.QFrame(self.mainwindow)
@@ -97,21 +106,18 @@ class GUI(object):
 
         #### Set size constraints
 
-        self.title.setMinimumSize(QtCore.QSize(300, 0))
-        self.title.setMaximumSize(QtCore.QSize(400, 16777215))
+        self.title.setMinimumSize(QtCore.QSize(155, 0))
+        self.title.setMaximumSize(QtCore.QSize(155, 16777215))
 
         #### Set text to be displayed
 
-        self.title.setText(_translate("MainWindow", "    SUPERLOGISTIKKPROGRAM SATURN 3000X-i"))
+            # This is done in the clock function at the bottom of the code
 
         #### Set fonts
 
         font = QtGui.QFont()
         font.setFamily("Roboto Cn")
-        font.setPixelSize(16)
-        font.setBold(True)
-        font.setItalic(False)
-        font.setWeight(75)
+        font.setPixelSize(30)
         font.setKerning(False)
         self.title.setFont(font)
         self.title.setStyleSheet(       "border-bottom-right-radius:15px;"      "border-bottom-left-radius:5px;"        "color: rgb(255, 255, 255);"            
@@ -264,11 +270,6 @@ class GUI(object):
         self.rooms["room4"].label_2.setText(_translate("MainWindow", "Injeksjonsrom 4"))
         self.rooms["room5"].label_2.setText(_translate("MainWindow", "PET-Scan"))
 
-        # Configure start-buttons to color function:
-        for i in range(1,6):
-            self.rooms["room"+f"{i}"].start.clicked.connect(lambda: self.timerColors())
-            self.rooms["room"+f"{i}"].textenter.returnPressed.connect(lambda: self.timerColors())
-
         ################################################################################################################
         # Create the frame that will contain the other contents in the application
         ################################################################################################################
@@ -398,6 +399,20 @@ class GUI(object):
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+########################################################################################################################
+#   Configure the buttons
+########################################################################################################################
+
+        self.buttonConfig()
+
+########################################################################################################################
+#   Start the global clock
+########################################################################################################################
+
+        # I do this at the end and not the begining because the clock() function needs the title label to bed
+        # created before it is called
+        self.clock()
+
     # Create a function to check if all timers are on or off
     def timersOff(self):
 
@@ -450,12 +465,13 @@ class GUI(object):
 
         self.changeColors()
 
-
-        greenTime   = 30 * 60  # 30 minutes
-        redTime     = 10 * 60  # 10 minutes
-
     # Change the colors of the timerframe in according to the alphaWave
     def changeColors(self):
+
+        # Define time intervals:
+        greenTime = 15 * 60  # 30 minutes
+        redTime = 5 * 60  # 10 minutes
+
         # Change the color of all rooms in synchronization
         for i in range(1,6):
 
@@ -484,6 +500,162 @@ class GUI(object):
                     self.rooms["room"+f"{i}"].timerframe.setStyleSheet(f"""border-radius:40px; background:none; border:2px solid;
                                                                           border-color: rgb(255, 255, 255, 255);""")
 
+    # Configure buttons
+    def buttonConfig(self):
+
+        # Configure start-buttons to color function:
+        for i in range(1, 6):
+            self.rooms["room" + f"{i}"].start.clicked.connect(              lambda: self.timerColors())
+            self.rooms["room" + f"{i}"].textenter.returnPressed.connect(    lambda: self.timerColors())
+
+        ################################################################################################################
+        #Configure the plus and minus buttons for each room. This got buggy with a for loop
+        ################################################################################################################
+
+        ##### Plus
+
+        self.rooms["room1"].plus.clicked.connect(lambda:    self.overview.patients.addTime  (
+                                                                self.rooms["room1"].pasientsvarlabel.text(),
+                                                                self.rooms["room1"].textenter.text(),
+                                                                self.rooms["room1"].timer_counter_num
+                                                )                                           )
+        self.rooms["room1"].plus.clicked.connect(lambda:    self.rooms["room1"].addTime()   )
+
+        #### Minus
+
+        self.rooms["room1"].minus.clicked.connect(lambda:    self.overview.patients.subTime  (
+                                                                self.rooms["room1"].pasientsvarlabel.text(),
+                                                                self.rooms["room1"].textenter.text(),
+                                                                self.rooms["room1"].timer_counter_num
+                                                )                                           )
+        self.rooms["room1"].minus.clicked.connect(lambda:    self.rooms["room1"].negTime()   )
 
 
 
+
+
+
+
+
+
+
+        self.rooms["room2"].plus.clicked.connect(
+            lambda: self.addTime(self.rooms["room2"].pasientsvarlabel.text(),
+                                 self.rooms["room2"].textenter.text()))
+        self.rooms["room2"].plus.clicked.connect(
+            lambda: self.overview.patients.addTime( self.rooms["room2"].pasientsvarlabel.text(),
+                                            self.rooms["room2"].textenter.text()))
+
+        self.rooms["room3"].plus.clicked.connect(
+            lambda: self.addTime(self.rooms["room3"].pasientsvarlabel.text(),
+                                 self.rooms["room3"].textenter.text()))
+        self.rooms["room3"].plus.clicked.connect(
+            lambda: self.overview.patients.addTime( self.rooms["room3"].pasientsvarlabel.text(),
+                                            self.rooms["room3"].textenter.text()))
+
+
+        self.rooms["room4"].plus.clicked.connect(
+            lambda: self.addTime(self.rooms["room4"].pasientsvarlabel.text(),
+                                 self.rooms["room4"].textenter.text()))
+        self.rooms["room4"].plus.clicked.connect(
+            lambda: self.overview.patients.addTime(self.rooms["room4"].pasientsvarlabel.text(),
+                                            self.rooms["room4"].textenter.text()))
+
+        self.rooms["room5"].plus.clicked.connect(
+            lambda: self.addTime(self.rooms["room5"].pasientsvarlabel.text(),
+                                 self.rooms["room5"].textenter.text()))
+        self.rooms["room5"].plus.clicked.connect(
+            lambda: self.overview.patients.addTime( self.rooms["room5"].pasientsvarlabel.text(),
+                                            self.rooms["room5"].textenter.text()))
+
+    # Make a global clock
+    def clock(self):
+
+        # Make a string with the current time
+        def runClock():
+            t = time.localtime()
+            self.time = time.strftime("%H:%M:%S", t)
+            self.title.setText(self._translate("MainWindow", f"  {self.time}"))
+
+        # Run the string function once so the clock appears right from opening
+        runClock()
+
+        # Create the timer that runs the clock once a second
+        self.clock = QtCore.QTimer()
+        self.clock.timeout.connect(runClock)
+        self.clock.timeout.connect(lambda: self.patient2Room())
+        self.clock.setInterval(1000)
+        self.clock.start()
+
+    #Function that moves patients from the waiting list to thir specified treatment room
+    # when the time for treatment has come
+    def patient2Room(self):
+
+        # Fetch the global current time and turn it into an integer value consisting of minutes from midnight:
+        hours, minutes, seconds = self.time.split(':')
+        self.clockNum           = int(minutes) + (int(hours) * 60)
+
+        # Only run this function if the dictionary is not empty. If not the program would crash on opening since
+        # no patients would be added yet
+        if self.overview.patients.dict != {}:
+
+            # Iterate through the patient schedule
+            for i in self.overview.patients.dict:
+
+                #Make a string that decides which room the for loop is at (index 1 = roomnumber)
+                if self.overview.patients.dict[i][1] == "PET-Scan":
+                    room = "room5"
+                else:
+                    room = f"room{self.overview.patients.dict[i][1]}"
+
+                # Convert the scheduled time to minutes past midnight
+                Hours, Minutes  = self.overview.patients.dict[i][0].split(':')
+                patienttime     = (int(Hours)*60) + int(Minutes)
+
+                # Make a list with all minutes from pasienttime to pasienttime+45
+                timebuffer = []
+                for j in range(patienttime, patienttime+45):
+                    timebuffer.append(j)
+
+
+                petTid = str(datetime.timedelta(minutes=(patienttime + 45)))
+                if len(petTid) == 7:
+                    time = f"0{petTid}"
+                petTid = petTid[:5]
+
+
+            # If the time (at keyword index 0) = current time:
+                # switch out the label on patients room (keyword index 1)
+                if self.clockNum in timebuffer:
+
+                    # Only add the new patient if the old patient is finished
+                    if self.rooms[room].timer_counter_num == 0 or self.rooms[room].pasientsvarlabel.text() == i:
+
+                        self.rooms[room].pasientsvarlabel.setText(self._translate("MainWindow", f"{i}"))
+                        self.rooms[room].textenter.setEnabled(True)
+
+                        # If the treatment isn't startet yet, the status is "Waiting for treatment"
+                        if self.rooms[room].timer_counter_num == 0 and self.rooms[room].treatmentstarted == False:
+
+                            self.rooms[room].statussvarlabel.setText(self._translate("MainWindow", "Venter på injeksjon"))
+
+                        # When the treatment is over status is "Waiting for PET-Scan
+                        elif self.rooms[room].timer_counter_num == 0:
+
+                            self.rooms[room].statussvarlabel.setText(
+                                self._translate("MainWindow", "Avventer PET-Scan"))
+                            self.rooms[room].treatmentstarted = False
+
+                        # When the treatment is started and there is more than 15 min left: the status is "Under treatment"
+                        elif self.rooms[room].timer_counter_num >= (15 * 60):
+
+                            self.rooms[room].statussvarlabel.setText(self._translate("MainWindow", "Under behandling"))
+
+                        # When there is less than 15 minutes left, status is "WC and water"
+                        elif self.rooms[room].timer_counter_num < (15 * 60) and self.rooms[room].timer_counter_num > 0:
+
+                            self.rooms[room].statussvarlabel.setText(self._translate("MainWindow", "Vann og WC"))
+
+                        # Next treatment is patients.dict index 0 - the originally scheduled time for the PET-Scan plus
+                        # any possible delays
+                        self.rooms[room].nestebehsvarlabel.setText(self._translate("MainWindow", f"{petTid}"))

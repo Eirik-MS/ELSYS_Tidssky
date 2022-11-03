@@ -14,6 +14,13 @@ class Patients:
 
         sec = minutes * 60
         time = str(datetime.timedelta(minutes=minutes))
+
+
+        if len(time) > 8:
+            time = time[8:]
+        elif len(time) == 7:
+            time = f"0{time}"
+
         time = time[:5]
         return time
 
@@ -21,17 +28,39 @@ class Patients:
 
         self.dict[name] = [time, room, obj]
 
-    def addTime(self, name, addtime):
+    # Function for setting new time in the dictionary when time is added:
+    def addTime(self, name, addtime, timercounternum):
 
-        timeInt = self.string2Min(self.dict[name][0])
-        newTime = (timeInt + int(addtime))
-        self.dict[name][0] = self.min2String(newTime)
+        # Make sure you can't add time so the timer goes past 24 hours
+        if timercounternum + (int(addtime)*60) >= 86400:
+            pass
 
-    def subTime(self, name, negtime):
+        # Combine the added time with the current time, make it into a string and replace the dict value
+        else:
+            timeInt = self.string2Min(self.dict[name][0])
+            newTime = (timeInt + int(addtime))
+            self.dict[name][0] = self.min2String(newTime)
 
-        timeInt = self.string2Min(self.dict[name][0])
-        newTime = (timeInt - int(negtime))
-        self.dict[name][0] = self.min2String(newTime)
+        print(self.dict[name][0])
+
+    # Function for setting new time in the dictionary when time is subtracted:
+    def subTime(self, name, negtime, timercounternum):
+
+        # If user tries to subtract more time than the counter has left, just remove the time that's left
+        if timercounternum - (int(negtime) * 60) <= 0:
+
+            min = timercounternum//60
+            timeInt = self.string2Min(self.dict[name][0])
+            newTime = (timeInt - min)
+            self.dict[name][0] = self.min2String(newTime)
+
+         # If not, remove the time specified
+        else:
+            timeInt = self.string2Min(self.dict[name][0])
+            newTime = (timeInt - int(negtime))
+            self.dict[name][0] = self.min2String(newTime)
+
+        #print(self.dict[name][0])
 
     def deletePatient(self, name):
 
