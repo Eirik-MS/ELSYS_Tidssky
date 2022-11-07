@@ -684,6 +684,7 @@ class Room(QtWidgets.QFrame):
             else:
 
                 display = datetime.timedelta(seconds=self.timer_counter_num)
+                display = f"0{display}"
                 self.timer_counter_num -= 1
 
         # Display the current time

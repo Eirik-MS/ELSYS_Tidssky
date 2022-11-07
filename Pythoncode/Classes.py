@@ -36,7 +36,7 @@ class Patients:
 
         # Make sure you can't add time so the timer goes past 24 hours
         if timercounternum + (int(addtime)*60) >= 86400:
-            pass
+            return
 
         # Combine the added time with the current time, make it into a string and replace the dict value
         else:

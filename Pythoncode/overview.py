@@ -332,6 +332,8 @@ class Overview(QtWidgets.QFrame):
 
         QtCore.QMetaObject.connectSlotsByName(self)
 
+        self.noe = "Ikke hei"
+
     # Function for adding another patient to the schedule
     def addPatient(self, name, time, room):
 
@@ -355,6 +357,10 @@ class Overview(QtWidgets.QFrame):
             del self.patients.dict[name]
             self.navninput.setText('')
             self.tidinput.setText('')
+
+    def endre(self):
+        self.noe = "hei"
+        print(self.noe)
 
 
 
