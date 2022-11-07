@@ -27,6 +27,9 @@ class Patients:
     def addPatient(self, name, time, room, obj):
 
         self.dict[name] = [time, room, obj]
+        # False if treatment hasn't started - True if it has
+        self.dict[name].append(False)
+        print(self.dict[name][3])
 
     # Function for setting new time in the dictionary when time is added:
     def addTime(self, name, addtime, timercounternum):
@@ -40,8 +43,6 @@ class Patients:
             timeInt = self.string2Min(self.dict[name][0])
             newTime = (timeInt + int(addtime))
             self.dict[name][0] = self.min2String(newTime)
-
-        print(self.dict[name][0])
 
     # Function for setting new time in the dictionary when time is subtracted:
     def subTime(self, name, negtime, timercounternum):

@@ -7,8 +7,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
-        self.ui = GUI()
-        self.ui.setupUi(self)
+        self.ui = GUI(self)
         self.show()
 
 
@@ -36,6 +35,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    MainWindoww = MainWindow()
-    MainWindoww.show()
+    MainWindow = MainWindow()
+    MainWindow.show()
     sys.exit(app.exec_())

@@ -32,7 +32,7 @@ class Addpatient(QtWidgets.QFrame):
         self.horizontalLayout_24.setSpacing(10)
         self.horizontalLayout_24.setObjectName("horizontalLayout_24")
         self.check = QtWidgets.QCheckBox(self.mainframe)
-        self.check.setMinimumSize(QtCore.QSize(0, 30))
+        self.check.setMinimumSize(QtCore.QSize(30, 30))
         self.check.setMaximumSize(QtCore.QSize(13, 16777215))
         self.check.setStyleSheet("QCheckBox{background:none;}")
         self.check.setText("")

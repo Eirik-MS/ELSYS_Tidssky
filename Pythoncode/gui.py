@@ -13,405 +13,394 @@ import datetime
 
 class GUI(object):
 
-    def __init__(self):
+    def __init__(self, MainWindow):
 
         # Definere hvor lang tid det er mellom to behandlinger på samme injeksjonsrom
         self.tidMellomInjeksjoner = 30
 
-    # Setup the GUI
-    def setupUi(self, MainWindow):
+        # Create global translation variable:
 
-########################################################################################################################
-#   Set the initial size of the main window and remove the window frames
-########################################################################################################################
-
-        MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        MainWindow.setAttribute(QtCore.Qt.WA_TranslucentBackground)
-        MainWindow.resize(1340, 768)
-
-########################################################################################################################
-# Since PyQt5 originally is written for CSS we need to format strings to be displayed correctly in python
-# Here we create a variable with a shorter name for that process.
-########################################################################################################################
-
-        _translate = QtCore.QCoreApplication.translate
         self._translate = QtCore.QCoreApplication.translate
 
-########################################################################################################################
-# Make the frame that is going to serve as the main window
-########################################################################################################################
+        # Run boot-up functions:
 
-        self.centrawidget = QtWidgets.QWidget(MainWindow)
-        self.centrawidget.setStyleSheet("background:none;")
-
-        #### Making the grid layout of the frame
-
-        self.drop_shadow_layout = QtWidgets.QVBoxLayout(self.centrawidget)
-        self.drop_shadow_layout.setContentsMargins(10, 10, 10, 10)
+        self.createMainframe(MainWindow)
 
 ########################################################################################################################
-# Making the frame that is going to serve as the application window
+#   Configuring boot-up functions. Each part of the object has it's own function. One function runs the next and so on
+#   These could all be in one function, but i found it much more tidy to divide them into distinct functions.
 ########################################################################################################################
 
-        self.mainwindow = QtWidgets.QFrame(self.centrawidget)
+        # Setup the GUI
+    def createMainframe(self, MainWindow):
+            ########################################################################################################################
+            #   Set the initial size of the main window and remove the window frames
+            ########################################################################################################################
 
-        #### Set corner roundness and background image
+            MainWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+            MainWindow.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+            MainWindow.resize(1340, 768)
 
-        self.mainwindow.setStyleSheet("border-image: url(:/images/Background3.jpg);border-radius: 15px;")
+            ########################################################################################################################
+            # Since PyQt5 originally is written for CSS we need to format strings to be displayed correctly in python
+            # Here we create a variable with a shorter name for that process.
+            ########################################################################################################################
 
-        #### Create the grid layout of the application window. The window is divided into
-        #### three frames stacked on topof each other
+            _translate = QtCore.QCoreApplication.translate
 
-        self.verticalLayout = QtWidgets.QVBoxLayout(self.mainwindow)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout.setSpacing(0)
 
-########################################################################################################################
-#   Creating the top frame
-########################################################################################################################
+            ########################################################################################################################
+            # Make the frame that is going to serve as the main window
+            ########################################################################################################################
 
-        self.top = QtWidgets.QFrame(self.mainwindow)
+            self.centrawidget = QtWidgets.QWidget(MainWindow)
+            self.centrawidget.setStyleSheet("background:none;")
 
-        #### Set size constraints
+            #### Making the grid layout of the frame
 
-        self.top.setMinimumSize(QtCore.QSize(0, 50))
-        self.top.setMaximumSize(QtCore.QSize(16777215, 50))
+            self.drop_shadow_layout = QtWidgets.QVBoxLayout(self.centrawidget)
+            self.drop_shadow_layout.setContentsMargins(10, 10, 10, 10)
 
-        #### Unable backgrounds so that the main background image is not repeated within this frame
+            ########################################################################################################################
+            # Making the frame that is going to serve as the application window
+            ########################################################################################################################
 
-        self.top.setStyleSheet("border-image:none; background:none;")
+            self.mainwindow = QtWidgets.QFrame(self.centrawidget)
 
-        #### Create the grid layout of the frame
+            #### Set corner roundness and background image
 
-        self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.top)
-        self.horizontalLayout_3.setContentsMargins(4, 4, 0, 0)
-        self.horizontalLayout_3.setSpacing(0)
+            self.mainwindow.setStyleSheet("border-image: url(:/images/Background3.jpg);border-radius: 15px;")
 
-        ################################################################################################################
-        # Creating the frame with the application title
-        ################################################################################################################
+            #### Create the grid layout of the application window. The window is divided into
+            #### three frames stacked on topof each other
 
-        self.frame = QtWidgets.QFrame(self.top)
-        self.frame.setStyleSheet("background:none;")
+            self.verticalLayout = QtWidgets.QVBoxLayout(self.mainwindow)
+            self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+            self.verticalLayout.setSpacing(0)
 
-        #### Creating the grid layout inside this frame
+            ########################################################################################################################
+            #   Creating the top frame
+            ########################################################################################################################
 
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.frame)
-        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_2.setSpacing(0)
+            self.top = QtWidgets.QFrame(self.mainwindow)
 
-        #### Creating the label (text box) to display the application title
+            #### Set size constraints
 
-        self.title = QtWidgets.QLabel(self.frame)
+            self.top.setMinimumSize(QtCore.QSize(0, 50))
+            self.top.setMaximumSize(QtCore.QSize(16777215, 50))
 
-        #### Set size constraints
+            #### Unable backgrounds so that the main background image is not repeated within this frame
 
-        self.title.setMinimumSize(QtCore.QSize(155, 0))
-        self.title.setMaximumSize(QtCore.QSize(155, 16777215))
+            self.top.setStyleSheet("border-image:none; background:none;")
 
-        #### Set text to be displayed
+            #### Create the grid layout of the frame
+
+            self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.top)
+            self.horizontalLayout_3.setContentsMargins(4, 4, 0, 0)
+            self.horizontalLayout_3.setSpacing(0)
+
+            ################################################################################################################
+            # Creating the frame with the application title
+            ################################################################################################################
+
+            self.frame = QtWidgets.QFrame(self.top)
+            self.frame.setStyleSheet("background:none;")
+
+            #### Creating the grid layout inside this frame
+
+            self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.frame)
+            self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+            self.verticalLayout_2.setSpacing(0)
+
+            #### Creating the label (text box) to display the application title
+
+            self.title = QtWidgets.QLabel(self.frame)
+
+            #### Set size constraints
+
+            self.title.setMinimumSize(QtCore.QSize(155, 0))
+            self.title.setMaximumSize(QtCore.QSize(155, 16777215))
+
+            #### Set text to be displayed
 
             # This is done in the clock function at the bottom of the code
 
-        #### Set fonts
+            #### Set fonts
 
-        font = QtGui.QFont()
-        font.setFamily("Roboto Cn")
-        font.setPixelSize(30)
-        font.setKerning(False)
-        self.title.setFont(font)
-        self.title.setStyleSheet(       "border-bottom-right-radius:15px;"      "border-bottom-left-radius:5px;"        "color: rgb(255, 255, 255);"            
-                                        "background-color:rgba(0, 0, 0, 120);"  "border-bottom-right-radius:15px;"      "border-top-right-radius:15px;"
-                                        "border-bottom-left-radius:0px;")
+            font = QtGui.QFont()
+            font.setFamily("Roboto Cn")
+            font.setPixelSize(30)
+            font.setKerning(False)
+            self.title.setFont(font)
+            self.title.setStyleSheet(
+                "border-bottom-right-radius:15px;"      "border-bottom-left-radius:5px;"        "color: rgb(255, 255, 255);"
+                "background-color:rgba(0, 0, 0, 120);"  "border-bottom-right-radius:15px;"      "border-top-right-radius:15px;"
+                "border-bottom-left-radius:0px;")
 
-        #### Creating yet another layout in the frame so that the title is displayed in the middle verticaly
+            #### Creating yet another layout in the frame so that the title is displayed in the middle verticaly
 
-        self.verticalLayout_2.addWidget(self.title)
-        self.horizontalLayout_3.addWidget(self.frame)
+            self.verticalLayout_2.addWidget(self.title)
+            self.horizontalLayout_3.addWidget(self.frame)
 
-########################################################################################################################
-# Creating a frame to hold the open, close, and minimize buttons
-########################################################################################################################
+            ########################################################################################################################
+            # Creating a frame to hold the open, close, and minimize buttons
+            ########################################################################################################################
 
-        self.open_close = QtWidgets.QFrame(self.top)
+            self.open_close = QtWidgets.QFrame(self.top)
 
-        #### Size constraints
+            #### Size constraints
 
-        self.open_close.setMinimumSize(QtCore.QSize(130, 50))
-        self.open_close.setMaximumSize(QtCore.QSize(130, 50))
+            self.open_close.setMinimumSize(QtCore.QSize(130, 50))
+            self.open_close.setMaximumSize(QtCore.QSize(130, 50))
 
-        #### Set transparent background
+            #### Set transparent background
 
-        self.open_close.setStyleSheet("background:none")
+            self.open_close.setStyleSheet("background:none")
 
-        ### Set a grid layout
+            ### Set a grid layout
 
-        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.open_close)
-        self.horizontalLayout_4.setContentsMargins(50, 5, 0, -1)
-        self.horizontalLayout_4.setSpacing(0)
+            self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.open_close)
+            self.horizontalLayout_4.setContentsMargins(50, 5, 0, -1)
+            self.horizontalLayout_4.setSpacing(0)
 
-        ################################################################################################################
-        # Create the minimize button
-        ################################################################################################################
 
-        self.minimize = QtWidgets.QPushButton(self.open_close)
-        self.minimize.setMinimumSize(QtCore.QSize(16, 16))
-        self.minimize.setMaximumSize(QtCore.QSize(16, 16))
-        self.minimize.setStyleSheet(""" QPushButton{border-radius:8px;      background-color: rgb(255, 255, 0);}
-                                        QPushButton:hover{background-color:rgb(236, 236, 0);}""")
+            ################################################################################################################
+            # Create the minimize button
+            ################################################################################################################
 
-        #### Set the text of the button to nothing
+            self.minimize = QtWidgets.QPushButton(self.open_close)
+            self.minimize.setMinimumSize(QtCore.QSize(16, 16))
+            self.minimize.setMaximumSize(QtCore.QSize(16, 16))
+            self.minimize.setStyleSheet(""" QPushButton{border-radius:8px;      background-color: rgb(255, 255, 0);}
+                                            QPushButton:hover{background-color:rgb(236, 236, 0);}""")
 
-        self.minimize.setText("")
+            #### Set the text of the button to nothing
 
-        #### Set alignment within the frame
+            self.minimize.setText("")
 
-        self.horizontalLayout_4.addWidget(self.minimize, 0, QtCore.Qt.AlignTop)
+            #### Set alignment within the frame
 
-        ################################################################################################################
-        # Create the maximize button
-        ################################################################################################################
+            self.horizontalLayout_4.addWidget(self.minimize, 0, QtCore.Qt.AlignTop)
 
-        self.maximize = QtWidgets.QPushButton(self.open_close)
-        self.maximize.setMinimumSize(QtCore.QSize(16, 16))
-        self.maximize.setMaximumSize(QtCore.QSize(16, 16))
-        self.maximize.setStyleSheet(""" QPushButton{border-radius:8px;     background-color: rgb(2, 255, 2);}
-                                        QPushButton:hover{background-color:rgb(1, 211, 1);}""")
+            ################################################################################################################
+            # Create the maximize button
+            ################################################################################################################
 
-        #### Set the button text to nothing
+            self.maximize = QtWidgets.QPushButton(self.open_close)
+            self.maximize.setMinimumSize(QtCore.QSize(16, 16))
+            self.maximize.setMaximumSize(QtCore.QSize(16, 16))
+            self.maximize.setStyleSheet(""" QPushButton{border-radius:8px;     background-color: rgb(2, 255, 2);}
+                                            QPushButton:hover{background-color:rgb(1, 211, 1);}""")
 
-        self.maximize.setText("")
+            #### Set the button text to nothing
 
-        #### Set the alignment within the frame
+            self.maximize.setText("")
 
-        self.horizontalLayout_4.addWidget(self.maximize, 0, QtCore.Qt.AlignTop)
+            #### Set the alignment within the frame
 
-        ################################################################################################################
-        # Create the close button
-        ################################################################################################################
+            self.horizontalLayout_4.addWidget(self.maximize, 0, QtCore.Qt.AlignTop)
 
-        self.close = QtWidgets.QPushButton(self.open_close)
-        self.close.setMinimumSize(QtCore.QSize(16, 16))
-        self.close.setMaximumSize(QtCore.QSize(16, 16))
-        self.close.setStyleSheet("""    QPushButton{border-radius:8px;        background-color: rgb(255, 2, 2);}
-                                        QPushButton:hover{background-color:rgb(225, 1, 1);}                     """)
+            ################################################################################################################
+            # Create the close button
+            ################################################################################################################
 
-        #### Set button text to nothing
+            self.close = QtWidgets.QPushButton(self.open_close)
+            self.close.setMinimumSize(QtCore.QSize(16, 16))
+            self.close.setMaximumSize(QtCore.QSize(16, 16))
+            self.close.setStyleSheet("""    QPushButton{border-radius:8px;        background-color: rgb(255, 2, 2);}
+                                            QPushButton:hover{background-color:rgb(225, 1, 1);}                     """)
 
-        self.close.setText("")
+            #### Set button text to nothing
 
-        #### Set the alignment inside the frame
+            self.close.setText("")
 
-        self.horizontalLayout_4.addWidget(self.close, 0, QtCore.Qt.AlignTop)
-        self.horizontalLayout_3.addWidget(self.open_close, 0, QtCore.Qt.AlignTop)
-        self.verticalLayout.addWidget(self.top)
+            #### Set the alignment inside the frame
 
-########################################################################################################################
-# Create the middle frame of the application. This is the frame that will contain the main contents of the application
-########################################################################################################################
+            self.horizontalLayout_4.addWidget(self.close, 0, QtCore.Qt.AlignTop)
+            self.horizontalLayout_3.addWidget(self.open_close, 0, QtCore.Qt.AlignTop)
+            self.verticalLayout.addWidget(self.top)
 
-        self.middle = QtWidgets.QFrame(self.mainwindow)
-        self.middle.setStyleSheet("border-image:none;   background:none;")
 
-        #### Set the grid layout of the middle frame
+            ########################################################################################################################
+            # Create the middle frame of the application. This is the frame that will contain the main contents of the application
+            ########################################################################################################################
 
-        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.middle)
-        self.verticalLayout_3.setContentsMargins(4, 0, 4, 0)
-        self.verticalLayout_3.setSpacing(0)
+            self.middle = QtWidgets.QFrame(self.mainwindow)
+            self.middle.setStyleSheet("border-image:none;   background:none;")
 
-        ################################################################################################################
-        # Create the frame that will contain all of the five room() objects
-        ################################################################################################################
+            #### Set the grid layout of the middle frame
 
-        self.Rooms = QtWidgets.QFrame(self.middle)
+            self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.middle)
+            self.verticalLayout_3.setContentsMargins(4, 0, 4, 0)
+            self.verticalLayout_3.setSpacing(0)
 
-        #### Set size constraints
+            ########################################################################################################################
+            #   Start the global clock
+            ########################################################################################################################
 
-        self.Rooms.setMinimumSize(QtCore.QSize(1300, 340))
-        self.Rooms.setMaximumSize(QtCore.QSize(16777215, 500))
+            # I do this at the end and not the begining because the clock() function needs the title label to bed
+            # created before it is called
+            self.globalclock()
 
-        #### Set transparent background
+            ################################################################################################################
+            # Create the frame that will contain all of the five room() objects
+            ################################################################################################################
 
-        self.Rooms.setStyleSheet("background-color:none;")
+            self.Rooms = QtWidgets.QFrame(self.middle)
 
-        #### Set the grid layout
+            #### Set size constraints
 
-        self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.Rooms)
-        self.horizontalLayout_5.setContentsMargins(0, 20, 0, 4)
-        self.horizontalLayout_5.setSpacing(4)
-        self.verticalLayout_3.addWidget(self.Rooms)
+            self.Rooms.setMinimumSize(QtCore.QSize(1300, 340))
+            self.Rooms.setMaximumSize(QtCore.QSize(16777215, 500))
 
-        ################################################################################################################
-        # Create five rooms. The room object is imported from it's own class.
-        ################################################################################################################
+            #### Set transparent background
 
-        #### Make separate variables for each room so they can be modified independently, and add these to a dictionary
+            self.Rooms.setStyleSheet("background-color:none;")
 
-        self.rooms = {}
+            #### Set the grid layout
 
-        self.rooms["room1"] = Room()
-        self.rooms["room2"] = Room()
-        self.rooms["room3"] = Room()
-        self.rooms["room4"] = Room()
-        self.rooms["room5"] = Room()
+            self.horizontalLayout_5 = QtWidgets.QHBoxLayout(self.Rooms)
+            self.horizontalLayout_5.setContentsMargins(0, 20, 0, 4)
+            self.horizontalLayout_5.setSpacing(4)
+            self.verticalLayout_3.addWidget(self.Rooms)
 
-        #### Add each room to the layout of self.Rooms
+            ################################################################################################################
+            # Create five rooms. The room object is imported from it's own class.
+            ################################################################################################################
 
-        self.horizontalLayout_5.addWidget(self.rooms["room1"])
-        self.horizontalLayout_5.addWidget(self.rooms["room2"])
-        self.horizontalLayout_5.addWidget(self.rooms["room3"])
-        self.horizontalLayout_5.addWidget(self.rooms["room4"])
-        self.horizontalLayout_5.addWidget(self.rooms["room5"])
+            # Define the overview class first so that we can import it into the room class
 
-        #### Change the titles of each room (Room nr. 1 already has the correct title)
+            self.overview = Overview(self.middle)
 
-        self.rooms["room2"].label_2.setText(_translate("MainWindow", "Injeksjonsrom 2"))
-        self.rooms["room3"].label_2.setText(_translate("MainWindow", "Injeksjonsrom 3"))
-        self.rooms["room4"].label_2.setText(_translate("MainWindow", "Injeksjonsrom 4"))
-        self.rooms["room5"].label_2.setText(_translate("MainWindow", "PET-Scan"))
+            #### Make separate variables for each room so they can be modified independently, and add these to a dictionary
 
-        ################################################################################################################
-        # Create the frame that will contain the other contents in the application
-        ################################################################################################################
+            self.rooms = {}
 
-        self.overview = Overview(self.middle)
+            for roomnr in range(1, 6):
+                self.rooms[f"room{roomnr}"] = Room(Master=self.Rooms, gui=self, ow=self.overview)
+                self.horizontalLayout_5.addWidget(self.rooms[f"room{roomnr}"])
+                self.rooms[f"room{roomnr}"].label_2.setText(_translate("MainWindow", f"Injeksjonsrom {roomnr}"))
+                self.rooms[f"room{roomnr}"].roomnr = str(roomnr)
+            self.rooms["room5"].label_2.setText(_translate("MainWindow", "PET-Scan"))
+            self.rooms["room5"].roomnr = "PET-Scan"
 
+            ################################################################################################################
+            # Create the frame that will contain the other contents in the application
+            ################################################################################################################
 
-        #### Set background color to be semi-transparent
 
 
+            ### Set grid layout
 
-        ### Set grid layout
+            self.verticalLayout_3.addWidget(self.overview)
+            self.verticalLayout.addWidget(self.middle)
 
-        self.verticalLayout_3.addWidget(self.overview)
-        self.verticalLayout.addWidget(self.middle)
+            ########################################################################################################################
+            # Create the bottom of the three main frames. This frame will contain the credits and the widget to resize the frame
+            ########################################################################################################################
 
-########################################################################################################################
-# Create the bottom of the three main frames. This frame will contain the credits and the widget to resize the frame
-########################################################################################################################
+            self.bottom = QtWidgets.QFrame(self.mainwindow)
 
-        self.bottom = QtWidgets.QFrame(self.mainwindow)
+            #### Set size constraints
 
-        #### Set size constraints
+            self.bottom.setMinimumSize(QtCore.QSize(0, 20))
+            self.bottom.setMaximumSize(QtCore.QSize(16777215, 20))
 
-        self.bottom.setMinimumSize(QtCore.QSize(0, 20))
-        self.bottom.setMaximumSize(QtCore.QSize(16777215, 20))
+            #### Set transparent background
 
-        #### Set transparent background
+            self.bottom.setStyleSheet("border-image:none;   background:none")
 
-        self.bottom.setStyleSheet("border-image:none;   background:none")
+            #### Set grid layout
 
-        #### Set grid layout
+            self.horizontalLayout = QtWidgets.QHBoxLayout(self.bottom)
+            self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+            self.horizontalLayout.setSpacing(0)
+            self.horizontalLayout.setObjectName("horizontalLayout")
 
-        self.horizontalLayout = QtWidgets.QHBoxLayout(self.bottom)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout.setSpacing(0)
-        self.horizontalLayout.setObjectName("horizontalLayout")
+            #### Create the frame that will contain the credits label
 
-        #### Create the frame that will contain the credits label
+            self.creditframe = QtWidgets.QFrame(self.bottom)
 
-        self.creditframe = QtWidgets.QFrame(self.bottom)
+            #### Set transparent background
 
-        #### Set transparent background
+            self.creditframe.setStyleSheet("border-image:none; background:none;")
 
-        self.creditframe.setStyleSheet("border-image:none; background:none;")
+            #### Set grid layout
 
-        #### Set grid layout
+            self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.creditframe)
+            self.horizontalLayout_2.setContentsMargins(7, 0, 0, 0)
+            self.horizontalLayout_2.setSpacing(0)
+            self.horizontalLayout_2.setObjectName("horizontalLayout_2")
 
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(self.creditframe)
-        self.horizontalLayout_2.setContentsMargins(7, 0, 0, 0)
-        self.horizontalLayout_2.setSpacing(0)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+            ################################################################################################################
+            # Create the text label
+            ################################################################################################################
 
-        ################################################################################################################
-        # Create the text label
-        ################################################################################################################
+            self.credits = QtWidgets.QLabel(self.creditframe)
 
-        self.credits = QtWidgets.QLabel(self.creditframe)
+            #### Set text to be displayed
 
-        #### Set text to be displayed
+            self.credits.setText(
+                _translate("MainWindow", "Av: Silnes, Chewiejczak, Nore, Singh Sidhu, Gripsgård, Støleggen"))
 
-        self.credits.setText(_translate("MainWindow", "Av: Silnes, Chewiejczak, Nore, Singh Sidhu, Gripsgård, Støleggen"))
+            #### Set font
 
-        #### Set font
+            font = QtGui.QFont()
+            font.setFamily("Roboto")
+            font.setPointSize(7)
+            self.credits.setFont(font)
+            self.credits.setStyleSheet("border-image:none;  background:none;")
 
-        font = QtGui.QFont()
-        font.setFamily("Roboto")
-        font.setPointSize(7)
-        self.credits.setFont(font)
-        self.credits.setStyleSheet("border-image:none;  background:none;")
+            ### Set grid of the text label for the text to be aligned properly
 
-        ### Set grid of the text label for the text to be aligned properly
+            self.horizontalLayout_2.addWidget(self.credits)
+            self.horizontalLayout.addWidget(self.creditframe)
 
-        self.horizontalLayout_2.addWidget(self.credits)
-        self.horizontalLayout.addWidget(self.creditframe)
+            ################################################################################################################
+            # Create the frame that will hold the stretching widget
+            ################################################################################################################
 
-        ################################################################################################################
-        # Create the frame that will hold the stretching widget
-        ################################################################################################################
+            self.stretch = QtWidgets.QFrame(self.bottom)
 
-        self.stretch = QtWidgets.QFrame(self.bottom)
+            #### Size constraints
 
-        #### Size constraints
+            self.stretch.setMinimumSize(QtCore.QSize(30, 30))
+            self.stretch.setMaximumSize(QtCore.QSize(30, 30))
 
-        self.stretch.setMinimumSize(QtCore.QSize(30, 30))
-        self.stretch.setMaximumSize(QtCore.QSize(30, 30))
+            #### Set transparent background
 
-        #### Set transparent background
+            self.stretch.setStyleSheet("border-image:none;  background:none;")
 
-        self.stretch.setStyleSheet("border-image:none;  background:none;")
+            #### Add the frame to a layout
 
-        #### Add the frame to a layout
+            self.horizontalLayout.addWidget(self.stretch)
+            self.verticalLayout.addWidget(self.bottom)
 
-        self.horizontalLayout.addWidget(self.stretch)
-        self.verticalLayout.addWidget(self.bottom)
+            self.stretchLay = QtWidgets.QHBoxLayout(self.stretch)
+            self.stretchLay.setContentsMargins(0, 0, 0, 0)
+            self.stretchLay.setSpacing(0)
 
-        self.stretchLay = QtWidgets.QHBoxLayout(self.stretch)
-        self.stretchLay.setContentsMargins(0, 0, 0, 0)
-        self.stretchLay.setSpacing(0)
+            ################################################################################################################
+            # Create the sizeGrip widget and add it to the layout
+            ################################################################################################################
 
-        ################################################################################################################
-        # Create the sizeGrip widget and add it to the layout
-        ################################################################################################################
+            self.sizeGrip = QtWidgets.QSizeGrip(self.stretch)
+            self.stretchLay.addWidget(self.sizeGrip)
 
-        self.sizeGrip = QtWidgets.QSizeGrip(self.stretch)
-        self.stretchLay.addWidget(self.sizeGrip)
+            #### I think this adds the mainframe to the application window. Edit: Yes, it does. If this is not activated
+            #### Every widget will try to fit into the same spot in the application window
 
+            self.drop_shadow_layout.addWidget(self.mainwindow)
 
+            #### I think this sets the centrawidget as the main widget, the one to contain all other widgets
 
+            MainWindow.setCentralWidget(self.centrawidget)
 
+            #### I searched up this one and had no clue what it meant. It is propably needed is all i could understand
 
+            QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-########################################################################################################################
-# Something i'm not quite sure what does, but needs to be here for everything to work
-########################################################################################################################
 
-        #### I think this adds the mainframe to the application window. Edit: Yes, it does. If this is not activated
-        #### Every widget will try to fit into the same spot in the application window
-
-        self.drop_shadow_layout.addWidget(self.mainwindow)
-
-        #### I think this sets the centrawidget as the main widget, the one to contain all other widgets
-
-        MainWindow.setCentralWidget(self.centrawidget)
-
-        #### I searched up this one and had no clue what it meant. It is propably needed is all i could understand
-
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-########################################################################################################################
-#   Configure the buttons
-########################################################################################################################
-
-        self.buttonConfig()
-
-########################################################################################################################
-#   Start the global clock
-########################################################################################################################
-
-        # I do this at the end and not the begining because the clock() function needs the title label to bed
-        # created before it is called
-        self.clock()
 
     # Create a function to check if all timers are on or off
     def timersOff(self):
@@ -500,76 +489,8 @@ class GUI(object):
                     self.rooms["room"+f"{i}"].timerframe.setStyleSheet(f"""border-radius:40px; background:none; border:2px solid;
                                                                           border-color: rgb(255, 255, 255, 255);""")
 
-    # Configure buttons
-    def buttonConfig(self):
-
-        # Configure start-buttons to color function:
-        for i in range(1, 6):
-            self.rooms["room" + f"{i}"].start.clicked.connect(              lambda: self.timerColors())
-            self.rooms["room" + f"{i}"].textenter.returnPressed.connect(    lambda: self.timerColors())
-
-        ################################################################################################################
-        #Configure the plus and minus buttons for each room. This got buggy with a for loop
-        ################################################################################################################
-
-        ##### Plus
-
-        self.rooms["room1"].plus.clicked.connect(lambda:    self.overview.patients.addTime  (
-                                                                self.rooms["room1"].pasientsvarlabel.text(),
-                                                                self.rooms["room1"].textenter.text(),
-                                                                self.rooms["room1"].timer_counter_num
-                                                )                                           )
-        self.rooms["room1"].plus.clicked.connect(lambda:    self.rooms["room1"].addTime()   )
-
-        #### Minus
-
-        self.rooms["room1"].minus.clicked.connect(lambda:    self.overview.patients.subTime  (
-                                                                self.rooms["room1"].pasientsvarlabel.text(),
-                                                                self.rooms["room1"].textenter.text(),
-                                                                self.rooms["room1"].timer_counter_num
-                                                )                                           )
-        self.rooms["room1"].minus.clicked.connect(lambda:    self.rooms["room1"].negTime()   )
-
-
-
-
-
-
-
-
-
-
-        self.rooms["room2"].plus.clicked.connect(
-            lambda: self.addTime(self.rooms["room2"].pasientsvarlabel.text(),
-                                 self.rooms["room2"].textenter.text()))
-        self.rooms["room2"].plus.clicked.connect(
-            lambda: self.overview.patients.addTime( self.rooms["room2"].pasientsvarlabel.text(),
-                                            self.rooms["room2"].textenter.text()))
-
-        self.rooms["room3"].plus.clicked.connect(
-            lambda: self.addTime(self.rooms["room3"].pasientsvarlabel.text(),
-                                 self.rooms["room3"].textenter.text()))
-        self.rooms["room3"].plus.clicked.connect(
-            lambda: self.overview.patients.addTime( self.rooms["room3"].pasientsvarlabel.text(),
-                                            self.rooms["room3"].textenter.text()))
-
-
-        self.rooms["room4"].plus.clicked.connect(
-            lambda: self.addTime(self.rooms["room4"].pasientsvarlabel.text(),
-                                 self.rooms["room4"].textenter.text()))
-        self.rooms["room4"].plus.clicked.connect(
-            lambda: self.overview.patients.addTime(self.rooms["room4"].pasientsvarlabel.text(),
-                                            self.rooms["room4"].textenter.text()))
-
-        self.rooms["room5"].plus.clicked.connect(
-            lambda: self.addTime(self.rooms["room5"].pasientsvarlabel.text(),
-                                 self.rooms["room5"].textenter.text()))
-        self.rooms["room5"].plus.clicked.connect(
-            lambda: self.overview.patients.addTime( self.rooms["room5"].pasientsvarlabel.text(),
-                                            self.rooms["room5"].textenter.text()))
-
     # Make a global clock
-    def clock(self):
+    def globalclock(self):
 
         # Make a string with the current time
         def runClock():
@@ -577,85 +498,14 @@ class GUI(object):
             self.time = time.strftime("%H:%M:%S", t)
             self.title.setText(self._translate("MainWindow", f"  {self.time}"))
 
+            hours, minutes, seconds = self.time.split(':')
+            self.clockNum = int(minutes) + (int(hours) * 60)
+
         # Run the string function once so the clock appears right from opening
         runClock()
 
         # Create the timer that runs the clock once a second
         self.clock = QtCore.QTimer()
         self.clock.timeout.connect(runClock)
-        self.clock.timeout.connect(lambda: self.patient2Room())
         self.clock.setInterval(1000)
         self.clock.start()
-
-    #Function that moves patients from the waiting list to thir specified treatment room
-    # when the time for treatment has come
-    def patient2Room(self):
-
-        # Fetch the global current time and turn it into an integer value consisting of minutes from midnight:
-        hours, minutes, seconds = self.time.split(':')
-        self.clockNum           = int(minutes) + (int(hours) * 60)
-
-        # Only run this function if the dictionary is not empty. If not the program would crash on opening since
-        # no patients would be added yet
-        if self.overview.patients.dict != {}:
-
-            # Iterate through the patient schedule
-            for i in self.overview.patients.dict:
-
-                #Make a string that decides which room the for loop is at (index 1 = roomnumber)
-                if self.overview.patients.dict[i][1] == "PET-Scan":
-                    room = "room5"
-                else:
-                    room = f"room{self.overview.patients.dict[i][1]}"
-
-                # Convert the scheduled time to minutes past midnight
-                Hours, Minutes  = self.overview.patients.dict[i][0].split(':')
-                patienttime     = (int(Hours)*60) + int(Minutes)
-
-                # Make a list with all minutes from pasienttime to pasienttime+45
-                timebuffer = []
-                for j in range(patienttime, patienttime+45):
-                    timebuffer.append(j)
-
-
-                petTid = str(datetime.timedelta(minutes=(patienttime + 45)))
-                if len(petTid) == 7:
-                    time = f"0{petTid}"
-                petTid = petTid[:5]
-
-
-            # If the time (at keyword index 0) = current time:
-                # switch out the label on patients room (keyword index 1)
-                if self.clockNum in timebuffer:
-
-                    # Only add the new patient if the old patient is finished
-                    if self.rooms[room].timer_counter_num == 0 or self.rooms[room].pasientsvarlabel.text() == i:
-
-                        self.rooms[room].pasientsvarlabel.setText(self._translate("MainWindow", f"{i}"))
-                        self.rooms[room].textenter.setEnabled(True)
-
-                        # If the treatment isn't startet yet, the status is "Waiting for treatment"
-                        if self.rooms[room].timer_counter_num == 0 and self.rooms[room].treatmentstarted == False:
-
-                            self.rooms[room].statussvarlabel.setText(self._translate("MainWindow", "Venter på injeksjon"))
-
-                        # When the treatment is over status is "Waiting for PET-Scan
-                        elif self.rooms[room].timer_counter_num == 0:
-
-                            self.rooms[room].statussvarlabel.setText(
-                                self._translate("MainWindow", "Avventer PET-Scan"))
-                            self.rooms[room].treatmentstarted = False
-
-                        # When the treatment is started and there is more than 15 min left: the status is "Under treatment"
-                        elif self.rooms[room].timer_counter_num >= (15 * 60):
-
-                            self.rooms[room].statussvarlabel.setText(self._translate("MainWindow", "Under behandling"))
-
-                        # When there is less than 15 minutes left, status is "WC and water"
-                        elif self.rooms[room].timer_counter_num < (15 * 60) and self.rooms[room].timer_counter_num > 0:
-
-                            self.rooms[room].statussvarlabel.setText(self._translate("MainWindow", "Vann og WC"))
-
-                        # Next treatment is patients.dict index 0 - the originally scheduled time for the PET-Scan plus
-                        # any possible delays
-                        self.rooms[room].nestebehsvarlabel.setText(self._translate("MainWindow", f"{petTid}"))

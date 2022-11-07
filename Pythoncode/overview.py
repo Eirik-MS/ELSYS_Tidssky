@@ -218,6 +218,13 @@ class Overview(QtWidgets.QFrame):
         self.tidframeLay.addWidget(self.tidinput)
         self.inputsLay.addWidget(self.tidframe)
 
+        #### Set a validator and an input mask for the time input:
+        self.tidinput.setInputMask("99:99")
+        self.tidinput.setText(self._translate("MainWindow", "00:00"))
+        self.reg_ex = QtCore.QRegExp("[0-2]{1}[0-9]{1}" + ":" + "[0-5]{1}[0-9]{1}")
+        self.input_validator1 = QtGui.QRegExpValidator(self.reg_ex, self.tidinput)
+        self.tidinput.setValidator(self.input_validator1)
+
         # Configure the room input
         self.romframe = QtWidgets.QFrame(self.inputs)
         self.romframe.setMinimumSize(QtCore.QSize(100, 0))

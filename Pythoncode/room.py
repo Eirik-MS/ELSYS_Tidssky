@@ -4,39 +4,48 @@ import Bakgrunnsbilde
 import datetime
 import numpy as np
 from sympy import *
-from main import MainWindow
+
 
 class Room(QtWidgets.QFrame):
 
-    # Initialize variables
-    def __init__(self, *args, **kwargs):
+    # Initialization sequence
+    def __init__(self, Master, gui, ow):
 
-        # Make global timer variables
+        # Instance variable that defines the room number:
+        self.roomnr = 1
+
+        # Initialize the main frame:
+        QtWidgets.QFrame.__init__(self, Master)
+
+        # Initialize global timer variables:
         self.timer_counter_num = 0
         self.timer_running = False
 
-        #Make the frame
-        QtWidgets.QFrame.__init__(self, *args, **kwargs)
-
-        # Create global translation protocol:
+        # Initialize global translation variable:
         self._translate = QtCore.QCoreApplication.translate
 
-        # Configure the frame
-        self.createRoom(self, *args, **kwargs)
+        # Run boot-up functions:
+        self.createMainframe(gui, ow)
 
-        # Define buttons
-        self.textenter.returnPressed.connect(lambda: self.timerFunctions('start'))
-        self.start.clicked.connect( lambda: self.timerFunctions('start'))
-        self.stop.clicked.connect(  lambda: self.timerFunctions('stop'))
-        self.reset.clicked.connect( lambda: self.timerFunctions('reset'))
+        # Confiugre buttons:
+        self.textenter.returnPressed.connect(lambda: self.timerFunctions('start', ow))
+        self.start.clicked.connect( lambda: self.timerFunctions('start', ow))
+        self.start.clicked.connect( lambda: gui.timerColors())
+        self.textenter.returnPressed.connect(lambda: gui.timerColors())
+        self.stop.clicked.connect(  lambda: self.timerFunctions('stop', ow))
+        self.reset.clicked.connect( lambda: self.timerFunctions('reset', ow))
+        self.plus.clicked.connect(  lambda: self.addTime(ow))
+        self.minus.clicked.connect( lambda: self.negTime(ow))
 
-    # Configure the Room-object (self):
-    def createRoom(self, *args, **kwargs):
+       # Connect the global glock to the patient2room() function
+
+        gui.clock.timeout.connect(lambda: self.patient2room(gui, ow))
 
 ########################################################################################################################
-# Configuring the main frame
+#   Configuring boot-up functions. Each part of the object has it's own function. One function runs the next and so on
+#   These could all be in one function, but i found it much more tidy to divide them into distinct functions.
 ########################################################################################################################
-
+    def createMainframe(self, gui, ow):
 
         self.setObjectName("MainWindow")
 
@@ -93,9 +102,6 @@ class Room(QtWidgets.QFrame):
         self.verticalLayout_6.addWidget(self.label_2, 0, QtCore.Qt.AlignHCenter)
         self.verticalLayout_4.addWidget(self.roomlabel)
 
-########################################################################################################################
-# Create the frame with pasient information/status
-########################################################################################################################
 
         self.pasientstatus = QtWidgets.QFrame(self)
 
@@ -261,9 +267,7 @@ class Room(QtWidgets.QFrame):
         self.gridLayout.addWidget(self.nestebehsvarframe, 2, 1, 1, 1)
         self.verticalLayout_4.addWidget(self.pasientstatus)
 
-########################################################################################################################
-# Create the timer
-########################################################################################################################
+
 
         self.timer = QtWidgets.QFrame(self)
         self.timer.setStyleSheet("border-radius:0px;""background-color: rgba(0, 0, 0, 120);"
@@ -530,6 +534,7 @@ class Room(QtWidgets.QFrame):
         # Initialize as diabled
         self.plus.setEnabled(False)
 
+
 ################################################################################################################
 # This one thing I have no idea of what does
 #################################################################################################################
@@ -560,11 +565,19 @@ class Room(QtWidgets.QFrame):
         #### Initialize variable to know treatment has not started
         self.treatmentstarted = False
 
+# ########################################################################################################################
+#   Configuring other functions:
+# ########################################################################################################################
+
     # Tells the timer how to operate
-    def timerFunctions(self, work):
+    def timerFunctions(self, work, ow):
 
         # When the start-button is pressed:
         if work == 'start' and self.textenter.text() != "00:00:00" and len(self.textenter.text()) != 2:
+
+            # Define the treatment as started:
+
+            ow.patients.dict[self.pasientsvarlabel.text()][3] = True
 
             # Set the state of the timer to Running
             self.timer_running = True
@@ -573,9 +586,6 @@ class Room(QtWidgets.QFrame):
             self.start.setEnabled(False)
             self.stop.setEnabled(True)
             self.reset.setEnabled((False))
-
-            # variable to know treatment has/has not started yet
-            self.treatmentstarted = True
 
              # If the timer starts for the first time, create timer-thread and fetch the time from the entrybox
             if self.timer_counter_num == 0:
@@ -635,6 +645,8 @@ class Room(QtWidgets.QFrame):
             else:
                 # Reset the time
                 self.timer_counter_num = 0
+                self.timer.stop()
+                self.timer_running = False
 
             # Display "00:00:00"
             self.lcdtime.setText(self._translate("MainWindow", '00:00:00'))
@@ -656,7 +668,6 @@ class Room(QtWidgets.QFrame):
             self.textenterlabel.setText(self._translate("MainWindow", ""))
             self.textenter.setValidator(self.input_validator1)
 
-
     # Counts down once a second
     def count(self):
 
@@ -676,7 +687,7 @@ class Room(QtWidgets.QFrame):
                 self.timer_counter_num -= 1
 
         # Display the current time
-        self.lcdtime.setText(self._translate("MainWindow", f'{display}'))
+        self.lcdtime.setText(self._translate("MainWindow", f'0{display}'))
 
         # Create a thread that can run the count() function once a second:
         # Create a thread that can run the count() function once a second:
@@ -687,36 +698,112 @@ class Room(QtWidgets.QFrame):
         # Run the count() function once a second
         self.timer.start()
 
-    # Add time to the display
-    def addTime(self):
+    # Add time to the display and schedule
+    def addTime(self, ow):
 
-        timeint = int(self.textenter.text())
-        sec     = timeint * 60
+        if int(self.textenter.text()) != "00":
 
-        if self.timer_counter_num + sec >= 86400:
-            pass
-        else:
-            self.timer_counter_num += sec
-            display = datetime.timedelta(seconds=self.timer_counter_num)
-            self.lcdtime.setText(self._translate("MainWindow", f'{display}'))
+            timeint = int(self.textenter.text())
+            sec     = timeint * 60
 
-    # Subtract time from the display
-    def negTime(self):
+            if self.timer_counter_num + sec >= 86400:
+
+                return
+
+            else:
+
+                # Add the time to the dictionary
+                ow.patients.addTime(self.pasientsvarlabel.text(), self.textenter.text(), self.timer_counter_num)
+                nexttreatment = ow.patients.string2Min(ow.patients.dict[f'{self.pasientsvarlabel.text()}'][0])
+                nexttreatment = nexttreatment + 45
+                nexttreatment = ow.patients.min2String(nexttreatment)
+                self.nestebehsvarlabel.setText(self._translate("MainWindow", f"{nexttreatment}"))
+                self.timer_counter_num += sec
+                display = datetime.timedelta(seconds=self.timer_counter_num)
+                self.lcdtime.setText(self._translate("MainWindow", f'0{display}'))
+
+    # Subtract time from the display and schedule
+    def negTime(self, ow):
 
         timeint = int(self.textenter.text())
         sec = timeint * 60
 
-        if self.timer_counter_num - sec < 0:
+        if self.timer_counter_num - sec <= 0:
 
-            self.timerFunctions('reset')
-            return
+            ow.patients.subTime(self.pasientsvarlabel.text(), self.timer_counter_num, self.timer_counter_num)
+            nexttreatment = ow.patients.string2Min(ow.patients.dict[f'{self.pasientsvarlabel.text()}'][0])
+            nexttreatment = nexttreatment + 45
+            nexttreatment = ow.patients.min2String(nexttreatment)
+            self.nestebehsvarlabel.setText(self._translate("MainWindow", f"{nexttreatment}"))
+            self.timerFunctions("reset", ow)
 
         else:
 
+            ow.patients.subTime(self.pasientsvarlabel.text(), self.textenter.text(), self.timer_counter_num)
+            nexttreatment = ow.patients.string2Min(ow.patients.dict[f'{self.pasientsvarlabel.text()}'][0])
+            nexttreatment = nexttreatment + 45
+            nexttreatment = ow.patients.min2String(nexttreatment)
+            self.nestebehsvarlabel.setText(self._translate("MainWindow", f"{nexttreatment}"))
             self.timer_counter_num -= sec
             display = datetime.timedelta(seconds=self.timer_counter_num)
+            self.lcdtime.setText(self._translate("MainWindow", f'0{display}'))
 
-        self.lcdtime.setText(self._translate("MainWindow", f'{display}'))
+    def patient2room(self, gui, ow):
 
-        #self.textenter.setText(self._translate("MainWindow", "00"))
+        # Only run this function if the dictionary is not empty. If not the program would crash on opening since
+        # no patients would be added yet
+        if ow.patients.dict == {}:
+            return
 
+        # Iterate through the patient schedule
+        for i in ow.patients.dict:
+
+            # Convert the scheduled time to minutes past midnight
+            Hours, Minutes = ow.patients.dict[i][0].split(':')
+            patienttime = (int(Hours) * 60) + int(Minutes)
+
+            # Run code below only if the clock is in the period where the patient is scheduled to be treated (or if the treatment isn't finished yet)
+            if ow.patients.dict[i][1] == self.roomnr and (  (gui.clockNum >= patienttime) and ( ((patienttime+45)>=gui.clockNum) or self.timer_running==True)) :
+
+                pass
+
+            else:
+
+                continue
+
+            # Find the time for PET-Scan:
+
+            petTime = str(datetime.timedelta(minutes=(patienttime + 45)))
+            if len(petTime) == 7:
+                time = f"0{petTid}"
+            petTime = petTime[:5]
+
+            # Don't swap patient if the countdown isn't finished
+            if self.timer_counter_num != 0:
+                continue
+
+            self.pasientsvarlabel.setText(self._translate("MainWindow", f"{i}"))
+            self.textenter.setEnabled(True)
+
+            # If the treatment isn't startet yet, the status is "Waiting for treatment"
+            if ow.patients.dict[i][3] == False:
+
+                self.statussvarlabel.setText(self._translate("MainWindow", "Venter på injeksjon"))
+
+            # When the treatment is over status is "Waiting for PET-Scan
+            elif self.timer_counter_num == 0:
+
+                self.statussvarlabel.setText(self._translate("MainWindow", "Avventer PET-Scan"))
+
+            # When the treatment is started and there is more than 15 min left: the status is "Under treatment"
+            elif self.timer_counter_num >= (15 * 60):
+
+                self.statussvarlabel.setText(self._translate("MainWindow", "Under behandling"))
+
+            # When there is less than 15 minutes left, status is "WC and water"
+            elif self.timer_counter_num < (15 * 60) and self.timer_counter_num > 0:
+
+                self.statussvarlabel.setText(self._translate("MainWindow", "Vann og WC"))
+
+            # Next treatment is patients.dict index 0 + 45 min and any possible delays
+            self.nestebehsvarlabel.setText(self._translate("MainWindow", f"{petTime}"))
