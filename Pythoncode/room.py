@@ -763,7 +763,7 @@ class Room(QtWidgets.QFrame):
             patienttime = (int(Hours) * 60) + int(Minutes)
 
             # Run code below only if the clock is in the period where the patient is scheduled to be treated (or if the treatment isn't finished yet)
-            if ow.patients.dict[i][1] == self.roomnr and (  (gui.clockNum >= patienttime) and ( ((patienttime+45)>=gui.clockNum) or self.timer_running==True)) :
+            if ow.patients.dict[i][1] == self.roomnr and (  (gui.clockNum >= patienttime) and ( ((patienttime+45)>=gui.clockNum) or self.timer_counter_num!=0)) :
 
                 pass
 
