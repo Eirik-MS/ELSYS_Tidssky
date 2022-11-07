@@ -29,7 +29,10 @@ class Patients:
         self.dict[name] = [time, room, obj]
         # False if treatment hasn't started - True if it has
         self.dict[name].append(False)
-        print(self.dict[name][3])
+        #False if treatment isn't over - True if it is
+        self.dict[name].append(False)
+        #False if not sent to PET-Scan - True if
+        self.dict[name].append(False)
 
     # Function for setting new time in the dictionary when time is added:
     def addTime(self, name, addtime, timercounternum):

@@ -26,6 +26,26 @@ class GUI(object):
 
         self.createMainframe(MainWindow)
 
+        ############ Create timer for colors
+
+        # # Set the framerate of the color animation
+        self.framerate = 20
+
+        # Duration of each pulse in second:
+        self.seconds = 1  # seconds
+        self.period = (2 * sympy.pi) / (self.framerate * self.seconds)
+        self.sineValue = 3 * sympy.pi / 2
+
+        # Define the biggest alpha value
+        self.alphaMax = 255
+
+        # Create a thread that can run the color animation:
+        self.colorTimer = QtCore.QTimer()
+        self.colorTimer.timeout.connect(lambda: self.alphaWave())
+        # Apply the framerate
+        self.colorTimer.setInterval(int(1000 / self.framerate))
+        self.colorTimer.start()
+
 ########################################################################################################################
 #   Configuring boot-up functions. Each part of the object has it's own function. One function runs the next and so on
 #   These could all be in one function, but i found it much more tidy to divide them into distinct functions.
@@ -400,47 +420,9 @@ class GUI(object):
 
             QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-
-
-    # Create a function to check if all timers are on or off
-    def timersOff(self):
-
-        self.totalTimerCount = (self.rooms["room1"].timer_counter_num + self.rooms["room2"].timer_counter_num +
-                                self.rooms["room3"].timer_counter_num + self.rooms["room4"].timer_counter_num +
-                                self.rooms["room5"].timer_counter_num)
-        if self.totalTimerCount == 0:
-            return True
-        else:
-            return False
-
-    #Create a timer that runs the alphaWave function at a custom framerate
-    def timerColors(self):
-
-        if self.timersOff() == False:
-            # # Set the framerate of the color animation
-            self.framerate = 20
-
-            # Duration of each pulse in second:
-            self.seconds = 1  # seconds
-            self.period = (2 * sympy.pi) / (self.framerate * self.seconds)
-            self.sineValue = 3 * sympy.pi / 2
-
-            # Define the biggest alpha value
-            self.alphaMax = 255
-
-            # Create a thread that can run the color animation:
-            self.colorTimer = QtCore.QTimer()
-            self.colorTimer.timeout.connect(lambda: self.alphaWave())
-
-            # Apply the framerate
-            self.colorTimer.setInterval(int(1000 / self.framerate))
-            self.colorTimer.start()
-
     # Function that creates a sinewave
     def alphaWave(self):
 
-        greenTime   = 30 * 60  # 30 minutes
-        redTime     = 10 * 60  # 10 minutes
         pulse = sympy.sin(self.sineValue)
         pulse = float((pulse + 1) / 2)
         self.sineValue += self.period
@@ -448,46 +430,6 @@ class GUI(object):
 
         if self.sineValue == 7*sympy.pi/2:
             self.sineValue = 3*sympy.pi/2
-
-        if self.timersOff() == True:
-            self.colorTimer.stop()
-
-        self.changeColors()
-
-    # Change the colors of the timerframe in according to the alphaWave
-    def changeColors(self):
-
-        # Define time intervals:
-        greenTime = 15 * 60  # 30 minutes
-        redTime = 5 * 60  # 10 minutes
-
-        # Change the color of all rooms in synchronization
-        for i in range(1,6):
-
-                if self.rooms["room"+f"{i}"].timer_counter_num >= greenTime:
-
-                    self.rooms["room"+f"{i}"].timerframe.setStyleSheet(f"""  border-radius:40px; background:none; border:2px solid;
-                                                                border-color: qlineargradient(spread:reflect, x1:0.5, y1:0, x2:1,
-                                                                y2:0, stop:0 rgba(0, {self.alpha}, 0, {self.alpha / 2}), 
-                                                                stop:1 rgba(120, 255, 120, {(self.alpha + 200) / 2}));""")
-
-                elif self.rooms["room"+f"{i}"].timer_counter_num >= redTime:
-
-                    self.rooms["room"+f"{i}"].timerframe.setStyleSheet(f"""  border-radius:40px; background:none; border:2px solid;
-                                                                border-color: qlineargradient(spread:reflect, x1:0.5, y1:0, x2:1,
-                                                                y2:0, stop:0 rgba({self.alpha}, 255, 0, {self.alpha / 2}), 
-                                                                stop:1 rgba(255, 255, 0, {(self.alpha + 200) / 2}));""")
-
-                elif self.rooms["room"+f"{i}"].timer_counter_num <= redTime and self.rooms["room"+f"{i}"].timer_counter_num > 0:
-
-                    self.rooms["room"+f"{i}"].timerframe.setStyleSheet(f"""  border-radius:40px; background:none; border:2px solid;
-                                                    border-color: qlineargradient(spread:reflect, x1:0.5, y1:0, x2:1,
-                                                    y2:0, stop:0 rgba({self.alpha}, 0, 0, {self.alpha / 2}), 
-                                                    stop:1 rgba(255, 120, 120, {(self.alpha + 200) / 2}));""")
-
-                elif self.rooms["room"+f"{i}"].timer_counter_num == 0:
-                    self.rooms["room"+f"{i}"].timerframe.setStyleSheet(f"""border-radius:40px; background:none; border:2px solid;
-                                                                          border-color: rgb(255, 255, 255, 255);""")
 
     # Make a global clock
     def globalclock(self):
