@@ -30,7 +30,7 @@ class Room(qw.QFrame):
         self.reset.clicked.connect( lambda: self.timerFunctions('reset', ow, gui))
         self.plus.clicked.connect(  lambda: self.addTime(ow))
         self.minus.clicked.connect( lambda: self.negTime(ow, gui))
-        self.startPet.clicked.connect(lambda: self.patient2pet(ow, gui))
+        self.startPet.clicked.connect(lambda: self.patient2pet(name=self.pasientsvarlabel.text(), ow=ow, gui=gui))
 
        # Connect the global glock to the patient2room() function
 
@@ -490,9 +490,11 @@ class Room(qw.QFrame):
         self.textenterlay = qw.QHBoxLayout(self.textenter)
         self.textenterlay.setContentsMargins(15, 0,0, 0)
         self.textenterlabel = qw.QLabel(self.textenter)
+        self.textenterlabel.setFont(font)
         self.textenterlay.addWidget(self.textenterlabel)
         self.textenterlabel.setStyleSheet("background:none")
         self.textenter.setFont(font)
+
 
 
         # Create an input mask:
@@ -577,8 +579,6 @@ class Room(qw.QFrame):
 
         self.lcdtime.setText(self._translate("MainWindow", "00:00:00"))
 
-        #### Initialize variable to know treatment has not started
-        self.treatmentstarted = False
 
 # ########################################################################################################################
 #   Configuring other functions:
@@ -777,6 +777,10 @@ class Room(qw.QFrame):
         # Iterate through the patient schedule to move patients from the schedule to the designated room
         for i in ow.patients.dict:
 
+            # Don't run the code below for the PET-Scan room:
+            if self.roomnr == "PET-Scan" or ow.patients.dict[i][5]==True:
+                continue
+
             # Convert the scheduled time to minutes past midnight
             Hours, Minutes = ow.patients.dict[i][0].split(':')
             patienttime = (int(Hours) * 60) + int(Minutes)
@@ -788,19 +792,20 @@ class Room(qw.QFrame):
             else:
                 continue
 
-            # Find the time for PET-Scan:
 
+            # Find the time for PET-Scan:
             petTime = str(datetime.timedelta(minutes=(patienttime + 45)))
             if len(petTime) == 7:
                 petTime = f"0{petTime}"
             petTime = petTime[:5]
 
             # Don't swap patient if the countdown isn't finished
-            #if self.timer_counter_num != 0:
-                #continue
-
             self.pasientsvarlabel.setText(self._translate("MainWindow", f"{i}"))
             self.textenter.setEnabled(True)
+
+            ################################
+            #     Configure status text    #
+            ################################
 
             # If the treatment isn't startet yet, the status is "Waiting for treatment"
             if ow.patients.dict[i][3] == False:
@@ -830,14 +835,15 @@ class Room(qw.QFrame):
 
             # Next treatment is patients.dict index 0 + 45 min and any possible delays
             self.nestebehsvarlabel.setText(self._translate("MainWindow", f"{petTime}"))
-
-
-
     def changeColors(self, gui, ow):
 
         # Define time intervals:
         greenTime = 15 * 60  # 30 minutes
         redTime = 5 * 60  # 10 minutes
+
+        # Only run code below if the patient label is not empty. If it does the program crashes
+        if self.pasientsvarlabel.text() == "":
+            return
 
         # Change the color of all rooms in synchronization
 
@@ -877,20 +883,25 @@ class Room(qw.QFrame):
                                                                 border-bottom-rightradius:      15px;
                                                                 color:              rgba(255, 255, 255, 255)        }}      
                                 """)
-    def patient2pet(self, ow, gui):
+    def patient2pet(self, name, ow, gui):
 
-        ow.patients.dict[self.pasientsvarlabel.text()][5] = True
+        ow.patients.dict[name][5] = True
 
         if gui.rooms["room5"].timer_counter_num == 0:
-            gui.rooms["room5"].pasientsvarlabel.setText(self.pasientsvarlabel.text())
+            gui.rooms["room5"].pasientsvarlabel.setText(name)
             gui.rooms["room5"].statussvarlabel.setText("Venter på behandling")
-        else:
-            print("kommer hit")
+            gui.rooms["room5"].textenter.setEnabled(True)
             self.startPet.setParent(None)
             self.verticalLayout_10.setContentsMargins(8, 3, 0, 0)
             self.statussvarlabel.setParent(self.statussvarframe)
             self.verticalLayout_10.addWidget(self.statussvarlabel)
-            self.statussvarlabel.setText("I kø til PET-Scan")
+            self.statussvarlabel.setText("")
+            self.pasientsvarlabel.setText("")
+            self.nestebehsvarlabel.setText("")
+            self.textenter.setEnabled(False)
+        else:
+            self.startPet.setText("I kø til PET-Scan...")
+
 
 
 

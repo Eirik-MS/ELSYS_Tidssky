@@ -8,9 +8,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         self.ui = GUI(self)
-        self.show()
-
-
 
         Ui_Functions.buttonDefinitions(self)
 
