@@ -18,6 +18,8 @@ def send_message(client):
         print("message sent")
     else:
         print("message failed")
+    time.sleep(20)
+    send_message(client)
 
 
 def on_message(client, userdata, msg):
