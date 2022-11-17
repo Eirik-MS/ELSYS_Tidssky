@@ -13,7 +13,11 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe(MQTT_TOPIC)
 
 def send_message(client):
-    client.publish('home/timer/start', 'hello world')
+    print("trying to send message")
+    if (client.publish('home/timer/start', 'hello world')):
+        print("message sent")
+    else:
+        print("message failed")
 
 
 def on_message(client, userdata, msg):

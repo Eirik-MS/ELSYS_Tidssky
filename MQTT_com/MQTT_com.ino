@@ -13,8 +13,8 @@ const char* mqtt_server = "192.168.216.64";  // IP of the MQTT broker
 const char* humidity_topic = "home/livingroom/humidity";
 const char* temperature_topic = "home/livingroom/temperature";
 const char* timer_startwifi = "home/timer/start";
-const char* mqtt_username = "espsky"; // MQTT username
-const char* mqtt_password = "espsky"; // MQTT password
+const char* mqtt_username = "host"; // MQTT username
+const char* mqtt_password = "host"; // MQTT password
 const char* clientID = "client_livingroom"; // MQTT client ID
 
 // Initialise the WiFi and MQTT Client objects
@@ -33,6 +33,7 @@ void connect_MQTT(){
     Serial.println("Connected to MQTT Broker!");
     client.subscribe(temperature_topic);
     client.subscribe(humidity_topic);
+    client.subscribe(timer_startwifi);
   }
   else {
     Serial.println("Connection to MQTT Broker failed...");
