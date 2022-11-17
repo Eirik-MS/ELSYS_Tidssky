@@ -33,9 +33,10 @@ def main():
     mqtt_client.on_message = on_message
 
     mqtt_client.connect(MQTT_ADDRESS, 1883)
+    send_message(mqtt_client)
     mqtt_client.loop_forever()
 
-    send_message(mqtt_client)
+    
     
         
 
