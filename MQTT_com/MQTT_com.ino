@@ -70,7 +70,7 @@ void setup() {
 
   // Wait until the connection has been confirmed before continuing
   while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
+    delay(1000);
     Serial.print(".");
   }
 
@@ -84,7 +84,10 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  connect_MQTT();
+  if (!client.connected()){
+    Serial.println("Trying to connect");
+    connect_MQTT();
+  }
   Serial.setTimeout(2000);
   float h = 12.4;
   float t = 24.5;
@@ -99,7 +102,7 @@ void loop() {
   // MQTT can only transmit strings
   String hs="Hum: "+String((float)h)+" % ";
   String ts="Temp: "+String((float)t)+" C ";
-
+  
   // PUBLISH to the MQTT Broker (topic = Temperature, defined at the beginning)
   if (client.publish(temperature_topic, String(t).c_str())) {
     Serial.println("Temperature sent!");
@@ -125,8 +128,6 @@ void loop() {
     delay(10); // This delay ensures that client.publish doesn't clash with the client.connect call
     client.publish(humidity_topic, String(h).c_str());
   }
-  delay(10000);
-  client.disconnect();  // disconnect from the MQTT broker
-  delay(1000*60);       // print new values every 1 Minute
+  delay(1000*50);       // print new values every 1 Minute
 
 }
