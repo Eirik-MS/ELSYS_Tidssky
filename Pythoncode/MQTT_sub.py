@@ -35,9 +35,8 @@ def main():
     mqtt_client.connect(MQTT_ADDRESS, 1883)
     mqtt_client.loop_forever()
 
-    while True:
-        send_message(mqtt_client)
-        time.sleep(20)
+    send_message(mqtt_client)
+    
         
 
 
