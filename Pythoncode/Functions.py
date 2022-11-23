@@ -5,7 +5,6 @@ from overview import *
 
 GLOBAL_STATE = 0
 
-
 class Ui_Functions(MainWindow):
     def __init__(self):
         self.patientdict = {}
